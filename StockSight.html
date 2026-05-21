@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StockSight — Portfolio Documentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a18;
+    --ink-mid: #4a4a46;
+    --ink-light: #8a8a84;
+    --rule: #e2e0d8;
+    --bg: #faf9f6;
+    --bg-card: #ffffff;
+    --accent: #1D4E89;
+    --accent-light: #dce8f5;
+    --accent-mid: #2a6abf;
+    --green: #0F6E56;
+    --green-light: #e1f5ee;
+    --amber: #BA7517;
+    --amber-light: #faeeda;
+    --red: #A32D2D;
+    --red-light: #fcebeb;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  /* ---- HEADER ---- */
+  .doc-header {
+    border-top: 3px solid var(--accent);
+    padding-top: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .tag-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid #b5d4f4;
+    border-radius: 4px;
+    padding: 4px 10px;
+    margin-bottom: 1.25rem;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 2.6rem;
+    line-height: 1.15;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--ink-mid);
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1.25rem;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-light);
+  }
+
+  .meta-value {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  /* ---- SECTION ---- */
+  .section {
+    margin-bottom: 3rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-light);
+    min-width: 24px;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  h3 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-mid);
+    margin-bottom: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  p {
+    color: var(--ink-mid);
+    margin-bottom: 0.9rem;
+    font-size: 15px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  /* ---- CALLOUT ---- */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-light);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 14px;
+    color: #0C447C;
+  }
+
+  /* ---- STAT GRID ---- */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 1.25rem 0;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-light);
+    margin-bottom: 4px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--ink-light);
+    margin-top: 2px;
+  }
+
+  /* ---- LAYER TABLE ---- */
+  .layer-list {
+    list-style: none;
+    margin: 1rem 0;
+  }
+
+  .layer-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 12px;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 14px;
+    align-items: start;
+  }
+
+  .layer-item:last-child { border-bottom: none; }
+
+  .layer-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-light);
+    border-radius: 4px;
+    padding: 3px 8px;
+    text-align: center;
+    line-height: 1.4;
+    margin-top: 1px;
+  }
+
+  .layer-desc { color: var(--ink-mid); line-height: 1.5; }
+
+  /* ---- BADGE ---- */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+
+  .badge-green { background: var(--green-light); color: #085041; border: 1px solid #9fe1cb; }
+  .badge-blue { background: var(--accent-light); color: #0C447C; border: 1px solid #b5d4f4; }
+  .badge-amber { background: var(--amber-light); color: #633806; border: 1px solid #fac775; }
+  .badge-red { background: var(--red-light); color: #791F1F; border: 1px solid #f7c1c1; }
+  .badge-gray { background: #f1efe8; color: #444441; border: 1px solid #d3d1c7; }
+
+  /* ---- TWO COL ---- */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.25rem 0;
+  }
+
+  @media (max-width: 580px) {
+    .two-col { grid-template-columns: 1fr; }
+    h1 { font-size: 2rem; }
+  }
+
+  .col-block {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+  }
+
+  .col-block h3 { margin-top: 0; }
+
+  .col-block ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .col-block ul li {
+    font-size: 13.5px;
+    color: var(--ink-mid);
+    padding: 3px 0;
+    border-bottom: 1px solid var(--rule);
+    line-height: 1.5;
+  }
+
+  .col-block ul li:last-child { border-bottom: none; }
+
+  /* ---- EVIDENCE BLOCK ---- */
+  .evidence-block {
+    background: var(--green-light);
+    border: 1px solid #9fe1cb;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+  }
+
+  .evidence-block p { color: #085041; margin-bottom: 0.5rem; font-size: 14px; }
+
+  /* ---- LIMIT BLOCK ---- */
+  .limit-block {
+    background: var(--amber-light);
+    border: 1px solid #fac775;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+  }
+
+  .limit-block p { color: #633806; margin-bottom: 0.5rem; font-size: 14px; }
+
+  /* ---- ROLE TABLE ---- */
+  .role-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 1rem 0;
+  }
+
+  .role-table th {
+    text-align: left;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-light);
+    padding: 6px 12px;
+    border-bottom: 2px solid var(--rule);
+  }
+
+  .role-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-mid);
+    vertical-align: top;
+  }
+
+  .role-table tr:last-child td { border-bottom: none; }
+
+  .role-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* ---- SKILLS GRID ---- */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 1.25rem 0;
+  }
+
+  .skill-item {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+  }
+
+  .skill-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .skill-desc {
+    font-size: 12px;
+    color: var(--ink-light);
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--ink-light);
+    font-family: 'DM Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="tag-line">Portfolio Documentation · Systems &amp; Workflow Design</div>
+  <h1>StockSight</h1>
+  <p class="subtitle">An automated event-driven trading signal system combining Gmail monitoring, AI-powered extraction, structured multi-layer evaluation, and a Google Sheets pipeline — with human-in-the-loop decision authority throughout.</p>
+  <div class="meta-row">
+    <div class="meta-item">
+      <span class="meta-label">Type</span>
+      <span class="meta-value">Operational AI Workflow System</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Phase</span>
+      <span class="meta-value">Live experiment (first 60–80 cases)</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Stack</span>
+      <span class="meta-value">Google Apps Script · Gemini AI · Claude AI · Gmail · Google Sheets</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Role</span>
+      <span class="meta-value">System designer, workflow architect, AI workflow developer</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- A. EXECUTIVE SUMMARY -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">A</span>
+    <h2>Executive Summary</h2>
+  </div>
+  <p>StockSight is a personal automated investment research pipeline built to identify mean reversion opportunities triggered by significant single-stock price drops. The system monitors financial email alerts around the clock, extracts candidate stocks using AI, and routes them through a structured multi-layer evaluation framework before surfacing a scored verdict to the human investor.</p>
+  <p>The system does not trade autonomously. It produces structured, scored, documented signals. All capital allocation decisions are made by the human operator after reviewing system output. The system's goal is to eliminate manual monitoring overhead and impose discipline on a signal-extraction process that is otherwise noisy, time-consuming, and prone to cognitive bias.</p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Scan frequency</div>
+      <div class="stat-value">2×</div>
+      <div class="stat-sub">daily automated runs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Paper capital</div>
+      <div class="stat-value">€500–1k</div>
+      <div class="stat-sub">per signal (by verdict grade)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Evaluation layers</div>
+      <div class="stat-value">11</div>
+      <div class="stat-sub">structured gate checks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Experiment phase</div>
+      <div class="stat-value">60–80</div>
+      <div class="stat-sub">closed cases needed to calibrate</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- B. PROBLEM & BASELINE -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">B</span>
+    <h2>Problem &amp; Baseline</h2>
+  </div>
+  <p>Mean reversion trading on large single-stock price drops is a well-documented edge in academic literature (Savor 2012; Dunis, Laws &amp; Rudy 2011). The practical challenge is not the strategy — it is the pipeline required to act on it reliably:</p>
+
+  <div class="two-col">
+    <div class="col-block">
+      <h3>Before StockSight</h3>
+      <ul>
+        <li>Manual inbox scanning across multiple email alert sources</li>
+        <li>No consistent criteria for what counted as a valid signal</li>
+        <li>Ad hoc evaluation: easy to talk yourself into or out of trades</li>
+        <li>No structured record of why a position was entered or closed</li>
+        <li>No feedback loop: impossible to calibrate over time</li>
+        <li>Time cost: 30–60 min/day of unfocused monitoring</li>
+      </ul>
+    </div>
+    <div class="col-block">
+      <h3>Core pain points</h3>
+      <ul>
+        <li>Signal noise — most alerts are irrelevant (fraud, sector moves, stale news)</li>
+        <li>Cognitive load — evaluating 5 potential stocks manually is exhausting</li>
+        <li>Inconsistency — different criteria applied each day</li>
+        <li>No structured documentation — no way to review past decisions</li>
+        <li>No calibration — no ability to improve the process over time</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- C. OBJECTIVES & NON-GOALS -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">C</span>
+    <h2>Objectives &amp; Non-Goals</h2>
+  </div>
+
+  <h3>Objectives</h3>
+  <p>The system is designed to:</p>
+  <ul style="list-style: none; padding: 0; margin-bottom: 1.25rem;">
+    <li style="padding: 5px 0; color: var(--ink-mid); font-size: 14.5px; border-bottom: 1px solid var(--rule);">✦ Automatically detect qualifying stock drop events from email alert streams</li>
+    <li style="padding: 5px 0; color: var(--ink-mid); font-size: 14.5px; border-bottom: 1px solid var(--rule);">✦ Filter noise and reject structurally invalid signals before human review</li>
+    <li style="padding: 5px 0; color: var(--ink-mid); font-size: 14.5px; border-bottom: 1px solid var(--rule);">✦ Apply consistent, documented, rule-based evaluation to every candidate</li>
+    <li style="padding: 5px 0; color: var(--ink-mid); font-size: 14.5px; border-bottom: 1px solid var(--rule);">✦ Produce a structured, scored, auditable verdict for each case</li>
+    <li style="padding: 5px 0; color: var(--ink-mid); font-size: 14.5px; border-bottom: 1px solid var(--rule);">✦ Track all cases in a structured Tracker with outcome recording</li>
+    <li style="padding: 5px 0; color: var(--ink-mid); font-size: 14.5px;">✦ Accumulate enough closed cases to calibrate and improve the model</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Explicit non-goals.</strong> StockSight does not make autonomous investment decisions. It does not execute trades. It does not predict price targets with certainty. It does not replace fundamental analysis for long-term positions. All scoring is advisory — final decisions remain with the human operator.
+  </div>
+
+  <p>This boundary is architecturally enforced: the system has no write access to any brokerage account, and every evaluation explicitly ends with a human review step before any real capital is committed.</p>
+</div>
+
+
+<!-- D. SYSTEM DESIGN -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">D</span>
+    <h2>System Design &amp; Workflow</h2>
+  </div>
+  <p>The system runs in two parallel pipelines: an automated intake (PS Scan) and a structured evaluation (Gate+SS), connected via a staging area in Google Sheets.</p>
+
+  <h3>Pipeline overview</h3>
+  <ul class="layer-list">
+    <li class="layer-item">
+      <span class="layer-name">Gmail inbox</span>
+      <span class="layer-desc">Financial alert emails from Google Alerts, ADVFN, and Benzinga are automatically labeled <code>StockSight_Pending</code> by Gmail filters. No manual inbox scanning required.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">PS Scan (6am + 6pm)</span>
+      <span class="layer-desc">Apps Script reads labeled threads (up to 5 per run), extracts body text, and sends it to Gemini AI with a structured extraction prompt. Gemini returns a JSON payload of candidate stocks and rejects.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Tracker intake</span>
+      <span class="layer-desc">Valid candidates are written to the Tracker sheet (cols A–G) with status NEW. Rejects are logged to the Rejected Cases tab with reason. Duplicate detection prevents re-processing active positions.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Gate+SS evaluation</span>
+      <span class="layer-desc">Claude AI evaluates each NEW row via an 11-layer structured evaluation: hard gate, live data fetch from Stock Events, sector context, gate criteria, management credibility, scoring, catalyst analysis, bear case, and trade type classification.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Updates tab sync</span>
+      <span class="layer-desc">Evaluation output (TSV format) is pasted into the Updates tab. The operator checks the A1 checkbox or waits for the 11pm safety-net trigger. Apps Script writes the evaluation columns (H–S) into the correct Tracker row.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Monitoring &amp; alerts</span>
+      <span class="layer-desc">The 7am daily check trigger monitors ACTIVE positions against stop loss, target, checkpoint dates, and time exits. ARRAYFORMULA columns auto-calculate stop loss, target, return %, and P&amp;L from locked entry prices.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Human review</span>
+      <span class="layer-desc">At each stage (evaluation, entry decision, checkpoint, closure), the human operator reviews system output before taking action. The system surfaces structure; the human makes decisions.</span>
+    </li>
+  </ul>
+</div>
+
+
+<!-- E. RULES, CONSTRAINTS & GUARDRAILS -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">E</span>
+    <h2>Rules, Constraints &amp; Guardrails</h2>
+  </div>
+  <p>The system is structured around explicit, documented rules at every layer. These are not soft guidelines — they are hard filters built into the prompt instructions and Apps Script logic.</p>
+
+  <h3>PS intake filters (Gemini)</h3>
+  <div class="two-col">
+    <div class="col-block">
+      <h3>Include only if all present</h3>
+      <ul>
+        <li>Named ticker or recognisable company</li>
+        <li>Specific event type confirmed</li>
+        <li>Numeric drop ≥8% (US) / ≥6% (EU) stated explicitly</li>
+      </ul>
+    </div>
+    <div class="col-block">
+      <h3>Immediate reject categories</h3>
+      <ul>
+        <li>Securities fraud / accounting restatement</li>
+        <li>Private companies (not listed)</li>
+        <li>Sector-wide or index-level drops</li>
+        <li>Stale events (&gt;5 trading days old)</li>
+        <li>Drop % not stated numerically</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Gate hard blockers (Claude)</h3>
+  <p>These cause an immediate REJECT regardless of drop magnitude:</p>
+  <div style="margin: 0.75rem 0;">
+    <span class="badge badge-red">Fraud / bankruptcy risk</span>
+    <span class="badge badge-red">Trading halt / suspension</span>
+    <span class="badge badge-red">Drop &lt; 8% (US)</span>
+    <span class="badge badge-red">Event &gt; 5 trading days old</span>
+    <span class="badge badge-red">Unknown event category</span>
+    <span class="badge badge-red">Required field missing</span>
+  </div>
+
+  <h3>Experiment phase constraint</h3>
+  <div class="callout">
+    For the first 60–80 closed cases, Gate verdicts are informational only — every case proceeds to full evaluation regardless of Gate outcome. This prevents premature hard-blocking before the system has enough data to validate each criterion. Calibration happens at case 60.
+  </div>
+
+  <h3>Position sizing rules</h3>
+  <table class="role-table">
+    <thead>
+      <tr><th>Verdict</th><th>Paper position</th><th>Logic</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>High-quality (10–12)</td><td>€1,000</td><td>Strong signal, clear catalyst, low ambiguity</td></tr>
+      <tr><td>Watch (7–9)</td><td>€500</td><td>Valid signal but uncertainty present</td></tr>
+      <tr><td>Discard (≤6)</td><td>€0</td><td>Insufficient signal — case closed immediately</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- F. AI VS DETERMINISTIC LOGIC -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">F</span>
+    <h2>Role of AI vs Deterministic Logic</h2>
+  </div>
+  <p>A deliberate design decision separates what AI does from what rules do. AI is never trusted for binary gate decisions — it is used for extraction, synthesis, and structured judgment within bounded frameworks.</p>
+
+  <table class="role-table">
+    <thead>
+      <tr><th>Task</th><th>Who does it</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Email text → structured JSON</td>
+        <td>Gemini AI (PS Scan)</td>
+        <td>Unstructured extraction from noisy email bodies; AI handles formatting variance</td>
+      </tr>
+      <tr>
+        <td>Ticker deduplication</td>
+        <td>Apps Script (deterministic)</td>
+        <td>Rule-based — active tickers always excluded, no ambiguity tolerated</td>
+      </tr>
+      <tr>
+        <td>Event cause verification</td>
+        <td>Claude AI (Gate)</td>
+        <td>Requires judgment: is this a real event? Does it match known categories?</td>
+      </tr>
+      <tr>
+        <td>Live data fetch (price, volume, 52W)</td>
+        <td>Claude AI (Layer 2)</td>
+        <td>Structured extraction from Stock Events page; deterministic from fixed source</td>
+      </tr>
+      <tr>
+        <td>Scoring (Clarity, Bounded, Business, Reaction)</td>
+        <td>Claude AI (Layer 6)</td>
+        <td>Multi-dimensional judgment within a fixed rubric; AI applies defined criteria consistently</td>
+      </tr>
+      <tr>
+        <td>Stop loss / target calculations</td>
+        <td>ARRAYFORMULA (Google Sheets)</td>
+        <td>Pure math; no AI needed; locked to actual entry price</td>
+      </tr>
+      <tr>
+        <td>Checkpoint scheduling</td>
+        <td>Apps Script (deterministic)</td>
+        <td>Date arithmetic; no judgment required</td>
+      </tr>
+      <tr>
+        <td>Entry decision</td>
+        <td>Human</td>
+        <td>Capital at risk; human retains full authority</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- G. EVALUATION LOGIC -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">G</span>
+    <h2>Evaluation Logic — 11-Layer Framework</h2>
+  </div>
+  <p>Every candidate that passes PS intake is evaluated through a fixed 11-layer sequence. Layers run in strict order; later layers do not run if a hard gate triggers at Layer 1.</p>
+
+  <ul class="layer-list">
+    <li class="layer-item">
+      <span class="layer-name">Layer 1<br>Hard Gate</span>
+      <span class="layer-desc">Rejects fraud, bankruptcy risk, halted stocks, drops under threshold, stale events, and missing required fields. Non-negotiable — no AI judgment involved at this stage.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 2<br>Data Fetch</span>
+      <span class="layer-desc">Fetches live data from Stock Events: current price, 52W high/low, volume vs average, upcoming events within 7 days, EPS vs estimate, revenue trend, analyst ratings, profit margin, P/E.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 3<br>Sector Context</span>
+      <span class="layer-desc">Web search for sector performance on event day. If sector down ≥3%, the drop is partially sector-driven — Clarity score reduced by 1, flagged as SECTOR CONTAMINATION.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 4<br>Gate Criteria</span>
+      <span class="layer-desc">Six checklist items: drop threshold, event category match, liquidity check, stabilisation check, 200-day MA duration, and market cap classification. Outputs VALID / REJECT / MONITOR.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 5<br>Management Credibility</span>
+      <span class="layer-desc">Checks for consecutive earnings misses, repeated guidance cuts, C-suite departures, and restatements. Two or more flags caps Business score at 1 and flags MANAGEMENT CREDIBILITY RISK.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 6<br>SS Scoring</span>
+      <span class="layer-desc">Four-dimensional score (0–3 each, total 0–12): Clarity, Bounded Downside, Business Strength, Market Reaction. Cap rule: if Business or Clarity ≤1, total capped at 9. Volume and 52W position apply modifiers.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 7<br>Recovery Catalyst</span>
+      <span class="layer-desc">Identifies the specific upcoming event that would confirm thesis resolution (earnings date, FDA decision, investor day). No catalyst found → Bounded score reduced by 1.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 8<br>Bear Case</span>
+      <span class="layer-desc">Generates 2–3 specific, factual reasons the trade could fail. Not speculative — based only on available data. Prevents confirmation bias.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 9<br>Perplexity Flag</span>
+      <span class="layer-desc">Triggers a structured Perplexity Pro research query — copy-paste ready — when the verdict is Watch (7–9) and any signal is ambiguous. Not triggered for Discard or High-quality with clear signals.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 10<br>Trade Classification</span>
+      <span class="layer-desc">Classifies as BOUNCE (10-day hard exit) or RECOVERY (4-week hard exit + 2-week checkpoint) based on event type and scoring. Calculates stop loss (–8% from current), target (pre-event price), and paper position size.</span>
+    </li>
+    <li class="layer-item">
+      <span class="layer-name">Layer 11<br>Output</span>
+      <span class="layer-desc">Produces: (1) human-readable evaluation summary, (2) TSV row formatted for paste into Updates tab, (3) Stock Events alert values to set on entry date.</span>
+    </li>
+  </ul>
+</div>
+
+
+<!-- H. EVIDENCE -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">H</span>
+    <h2>Evidence, Observations &amp; Current Phase</h2>
+  </div>
+
+  <div class="evidence-block">
+    <p><strong>Experiment phase — data still accumulating.</strong> The system is in active paper-trading operation. Meaningful analytics require 60–80 closed cases. Parameter calibration and any retrospective conclusions are deferred to that milestone. The observations below reflect the build and early operational period (April–May 2026) only.</p>
+  </div>
+
+  <h3>System behaviour observed</h3>
+  <p>The PS scan correctly filters out the majority of alert volume as structural risk or missing data, typically passing 1–3 candidates from a batch of 5–10 email threads. <em>(Observed repeatedly during operational use — not formally benchmarked.)</em></p>
+  <p>Evaluation output is reproducible: running the same candidate through the system on different days produces consistent scoring, because the rubric is explicit and AI is constrained by defined criteria rather than open-ended judgment. <em>(Observed — informal comparison only.)</em></p>
+  <p>The structured evaluation process reduces the time spent per candidate compared to unstructured manual research, with more consistent output format. <em>(Observed — time estimates are approximate.)</em></p>
+
+  <h3>Architectural decisions incorporated</h3>
+  <p>Several design decisions were revised in response to observed failure modes during the build period:</p>
+
+  <table class="role-table">
+    <thead>
+      <tr><th>Problem class</th><th>Design response</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>AI response truncation</td>
+        <td>Prompt brevity rules added; output schema constrained; JSON extraction made fault-tolerant with retry logic</td>
+      </tr>
+      <tr>
+        <td>Script scope conflicts</td>
+        <td>Configuration centralised to a single object; instruction text separated into a dedicated file to avoid variable collision</td>
+      </tr>
+      <tr>
+        <td>Execution time limits</td>
+        <td>Per-run batch size capped; labeling retained on failures so unprocessed items queue to the next run automatically</td>
+      </tr>
+      <tr>
+        <td>Data source reliability</td>
+        <td>Price fetching approach redesigned after formula-based methods proved unreliable; fallback logic added</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="limit-block" style="margin-top: 1.5rem;">
+    <p><strong>What this section does not yet contain:</strong> win rate analysis, scoring accuracy assessment, Gate criterion validation, and parameter calibration recommendations. These require the analytics milestone (≥60 closed cases) and will be added as a separate retrospective section at that point.</p>
+  </div>
+</div>
+
+
+<!-- I. LIMITATIONS -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">I</span>
+    <h2>Limitations</h2>
+  </div>
+
+  <div class="limit-block">
+    <p>These limitations are documented explicitly — not to undersell the system, but because honest scoping is part of responsible workflow design.</p>
+  </div>
+
+  <h3>Input dependency</h3>
+  <p>The system is only as good as its email alert sources. ADVFN, Google Alerts, and Benzinga provide solid coverage of US and UK large-caps, but EU mid-cap and sector-specific events may not surface consistently. Missed events are not detectable — the system cannot flag what it never received.</p>
+
+  <h3>AI judgment constraints</h3>
+  <p>Gemini (PS extraction) and Claude (Gate+SS evaluation) can misclassify ambiguous cases. The 11-layer rubric constrains this significantly, but it cannot eliminate it. Management credibility flags, sector contamination detection, and catalyst identification all involve judgment calls that may occasionally be wrong.</p>
+
+  <h3>Paper trading phase</h3>
+  <p>StockSight operates on paper positions only during the experiment phase. The scoring model is not yet calibrated against real outcomes — that requires 60–80 closed cases, which are still accumulating.</p>
+
+  <h3>No autonomous verification</h3>
+  <p>The PS scan extracts what is written in email alert text. It does not independently verify that a stock actually dropped by the stated percentage on the stated date. Cause verification always uses a separate, independent Google search at evaluation time — not the email source itself.</p>
+
+  <h3>Apps Script execution limits</h3>
+  <p>Google Apps Script has a 6-minute execution limit per trigger run. For high-volume alert days (&gt;5 threads), processing batches across two daily runs. This means brief delays are possible in extreme cases.</p>
+</div>
+
+
+<!-- J. TECHNICAL STACK -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">J</span>
+    <h2>Technical Stack</h2>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-item">
+      <div class="skill-title">Google Apps Script</div>
+      <div class="skill-desc">Automation layer: Gmail reading, Sheets writes, triggers, price locking</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Gemini 3.1 Flash Lite</div>
+      <div class="skill-desc">PS intake: structured JSON extraction from noisy email bodies</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Claude (Anthropic)</div>
+      <div class="skill-desc">Gate+SS evaluation: 11-layer structured analysis and scoring</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Google Sheets</div>
+      <div class="skill-desc">Tracker database, ARRAYFORMULA monitoring, Analytics tab</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Gmail label filters</div>
+      <div class="skill-desc">Automated email routing into StockSight_Pending queue</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Stock Events</div>
+      <div class="skill-desc">Primary data source for live price, volume, EPS, and earnings dates</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Perplexity Pro</div>
+      <div class="skill-desc">Deep research for ambiguous cases and parameter validation</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">AI instruction design</div>
+      <div class="skill-desc">Structured system prompts with explicit rules, extraction schemas, and output formats</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- K. WHAT THIS DEMONSTRATES -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">K</span>
+    <h2>What This Demonstrates</h2>
+  </div>
+
+  <p>StockSight is a practical demonstration of several capabilities relevant to AI operations, workflow design, and knowledge systems roles:</p>
+
+  <table class="role-table">
+    <thead>
+      <tr><th>Capability</th><th>Evidence in this project</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>AI workflow design</td>
+        <td>Full pipeline from unstructured email text → structured scored output, with explicit AI/rule/human responsibility boundaries at every step</td>
+      </tr>
+      <tr>
+        <td>AI instruction design</td>
+        <td>Two production system prompts (PS intake + Gate/SS evaluation) with explicit extraction schemas, rejection criteria, structured output formats, and verbosity constraints</td>
+      </tr>
+      <tr>
+        <td>Evaluation framework design</td>
+        <td>11-layer sequential evaluation with scoring rubric, cap rules, modifiers, and confidence levels — fully documented and reproducible</td>
+      </tr>
+      <tr>
+        <td>Operational system thinking</td>
+        <td>Trigger scheduling, cooldown logic, failure handling with automatic retry queuing, and execution constraint management built into the automation layer</td>
+      </tr>
+      <tr>
+        <td>Documentation governance</td>
+        <td>Handoff documents, knowledge base versioning (v1 → v2), architectural decision logs, parameter validation via academic research</td>
+      </tr>
+      <tr>
+        <td>Human-in-the-loop design</td>
+        <td>Every stage where capital or irreversible action is involved requires explicit human confirmation; system never acts autonomously on real resources</td>
+      </tr>
+      <tr>
+        <td>Iterative refinement</td>
+        <td>System evolved through documented failure modes — each problem class resolved with an architectural response and recorded rationale, not ad hoc fixes</td>
+      </tr>
+      <tr>
+        <td>Research-informed design</td>
+        <td>Parameter choices — drop thresholds, holding periods, RVOL classification, EU vs US adjustments — informed by published research (Savor 2012, Morgan Stanley 2025, Robeco 2023) and iterative operational testing</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top: 1.5rem;">
+    <strong>Relevant roles:</strong> AI workflow architect · AI operations · Evaluation system design · Knowledge workflow design · Internal AI tooling · Human-in-the-loop system design
+  </div>
+</div>
+
+
+<footer>
+  StockSight · Portfolio Documentation · Generated May 2026 · For CV and application use
+</footer>
+
+</body>
+</html>
