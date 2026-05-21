@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIDT — AI Agent Diagnostic Tool · Portfolio Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1D4E89;
+    --blue-light: #EAF1FB;
+    --blue-mid: #3A72B8;
+    --ink: #1A1A1A;
+    --ink-secondary: #4A4A4A;
+    --ink-muted: #7A7A7A;
+    --surface: #faf9f6;
+    --surface-card: #FFFFFF;
+    --border: #E2E0DA;
+    --border-strong: #C8C5BC;
+    --risk-low: #2D6A4F;
+    --risk-low-bg: #D8F3DC;
+    --risk-mod: #B45309;
+    --risk-mod-bg: #FEF3C7;
+    --risk-high: #9B1C1C;
+    --risk-high-bg: #FEE2E2;
+    --risk-unk: #374151;
+    --risk-unk-bg: #F3F4F6;
+    --font-heading: 'DM Serif Display', serif;
+    --font-body: 'Figtree', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 0 2.5rem;
+    background: var(--surface-card);
+  }
+  .doc-header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  .doc-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 1rem;
+  }
+  .doc-title {
+    font-family: var(--font-heading);
+    font-size: 2.75rem;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .doc-subtitle {
+    font-size: 1.05rem;
+    color: var(--ink-secondary);
+    margin-bottom: 2rem;
+    max-width: 600px;
+  }
+  .doc-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .doc-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .doc-meta-item .meta-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .doc-meta-item .meta-value {
+    font-size: 13px;
+    color: var(--ink-secondary);
+  }
+
+  /* ── LAYOUT ── */
+  .doc-body {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* ── STAT CARDS ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 3.5rem;
+  }
+  .stat-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem 1.25rem;
+  }
+  .stat-card .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .stat-card .stat-value {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .stat-card .stat-note {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-top: 4px;
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    margin-bottom: 3.5rem;
+    padding-bottom: 3.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child {
+    border-bottom: none;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+    line-height: 1.25;
+  }
+  p { margin-bottom: 1rem; color: var(--ink-secondary); }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid var(--blue);
+    background: var(--blue-light);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+  }
+  .callout-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+  .callout p {
+    font-size: 14px;
+    color: var(--ink-secondary);
+    margin: 0;
+  }
+
+  .callout-warning {
+    border-left-color: #B45309;
+    background: #FFFBEB;
+  }
+  .callout-warning .callout-title { color: #B45309; }
+
+  /* ── TWO-COL BLOCK ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+  .col-block {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem 1.25rem;
+  }
+  .col-block-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+  }
+  .col-block ul {
+    list-style: none;
+    padding: 0;
+  }
+  .col-block ul li {
+    font-size: 13.5px;
+    color: var(--ink-secondary);
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .col-block ul li:last-child { border-bottom: none; }
+  .col-block ul li::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--border-strong);
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+  .col-block.include ul li::before { background: var(--risk-low); }
+  .col-block.exclude ul li::before { background: var(--risk-high); }
+
+  /* ── PIPELINE ── */
+  .pipeline {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .pipeline-step {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 0 1rem;
+    position: relative;
+  }
+  .pipeline-step:not(:last-child) .step-line { border-left: 2px solid var(--border); }
+  .step-number-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--surface-card);
+    border: 1.5px solid var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--blue);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .step-line {
+    flex: 1;
+    width: 2px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+  .step-content {
+    padding: 0 0 1.75rem 0;
+  }
+  .step-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    padding-top: 5px;
+  }
+  .step-desc {
+    font-size: 13.5px;
+    color: var(--ink-secondary);
+    line-height: 1.55;
+    margin: 0;
+  }
+  .step-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .tag-input { background: #EAF1FB; color: var(--blue); }
+  .tag-process { background: #F3F0FF; color: #4C3AA3; }
+  .tag-output { background: #D8F3DC; color: var(--risk-low); }
+  .tag-human { background: #FEF3C7; color: var(--risk-mod); }
+
+  /* ── RISK LABELS ── */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 1.5rem 0;
+  }
+  .risk-pill {
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .risk-pill .risk-icon { font-size: 1.1rem; }
+  .risk-pill .risk-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .risk-pill .risk-desc { font-size: 12px; line-height: 1.4; }
+  .risk-low { background: var(--risk-low-bg); color: var(--risk-low); }
+  .risk-mod { background: var(--risk-mod-bg); color: var(--risk-mod); }
+  .risk-high { background: var(--risk-high-bg); color: var(--risk-high); }
+  .risk-unk { background: var(--risk-unk-bg); color: var(--risk-unk); }
+
+  /* ── DIMENSION LIST ── */
+  .dimension-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 600px) { .dimension-list { grid-template-columns: 1fr; } }
+  .dimension-item {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+  }
+  .dimension-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .dimension-why {
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* ── ROLE TABLE ── */
+  .role-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 13.5px;
+  }
+  .role-table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1.5px solid var(--border-strong);
+  }
+  .role-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+  }
+  .role-table tr:last-child td { border-bottom: none; }
+  .role-table .actor {
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  .actor-ai { color: var(--blue); }
+  .actor-rule { color: #4C3AA3; }
+  .actor-human { color: var(--risk-mod); }
+
+  /* ── KB CARDS ── */
+  .kb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 1.5rem 0;
+  }
+  .kb-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+  }
+  .kb-id {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--blue);
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .kb-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.35;
+  }
+  .kb-role {
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* ── CAPABILITY TABLE ── */
+  .cap-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 1.5rem 0;
+  }
+  .cap-table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1.5px solid var(--border-strong);
+  }
+  .cap-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+  }
+  .cap-table tr:last-child td { border-bottom: none; }
+  .cap-table .cap-name {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 13px;
+  }
+
+  /* ── LIMITATIONS ── */
+  .limitation-list {
+    margin: 1.25rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .limitation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 13.5px;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+  }
+  .limitation-item::before {
+    content: '—';
+    font-family: var(--font-mono);
+    color: var(--risk-high);
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── ROLES CALLOUT ── */
+  .roles-callout {
+    background: var(--surface-card);
+    border: 1px solid var(--blue);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .roles-callout .roles-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .roles-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .role-tag {
+    background: var(--blue-light);
+    color: var(--blue);
+    font-size: 12.5px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+  }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .doc-footer span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── NAV ── */
+  .doc-nav {
+    position: sticky;
+    top: 0;
+    background: rgba(250,249,246,0.95);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+    padding: 0 2rem;
+  }
+  .doc-nav-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-link:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── EVIDENCE TAG ── */
+  .evidence-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    background: #F3F4F6;
+    color: var(--risk-unk);
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="doc-header-inner">
+    <div class="doc-label">Portfolio Documentation · AI Systems Design</div>
+    <h1 class="doc-title">AI Agent Diagnostic Tool</h1>
+    <p class="doc-subtitle">A configuration-level diagnostic framework for identifying structural hallucination and reliability risks in instruction-configured AI agents.</p>
+    <div class="doc-meta">
+      <div class="doc-meta-item">
+        <span class="meta-label">Abbreviation</span>
+        <span class="meta-value">AIDT</span>
+      </div>
+      <div class="doc-meta-item">
+        <span class="meta-label">Status</span>
+        <span class="meta-value">Actively used — internal</span>
+      </div>
+      <div class="doc-meta-item">
+        <span class="meta-label">Implementation</span>
+        <span class="meta-value">Custom GPT · LLM-agnostic design</span>
+      </div>
+      <div class="doc-meta-item">
+        <span class="meta-label">Analysis type</span>
+        <span class="meta-value">Qualitative · Non-prescriptive</span>
+      </div>
+      <div class="doc-meta-item">
+        <span class="meta-label">Documented</span>
+        <span class="meta-value">May 2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="doc-nav">
+  <div class="doc-nav-inner">
+    <a href="#summary" class="nav-link">Summary</a>
+    <a href="#problem" class="nav-link">Problem</a>
+    <a href="#objectives" class="nav-link">Objectives</a>
+    <a href="#design" class="nav-link">System design</a>
+    <a href="#guardrails" class="nav-link">Guardrails</a>
+    <a href="#roles" class="nav-link">Roles</a>
+    <a href="#evaluation" class="nav-link">Evaluation</a>
+    <a href="#evidence" class="nav-link">Evidence</a>
+    <a href="#limitations" class="nav-link">Limitations</a>
+    <a href="#stack" class="nav-link">Stack</a>
+    <a href="#demonstrates" class="nav-link">Demonstrates</a>
+  </div>
+</nav>
+
+<!-- BODY -->
+<main class="doc-body">
+
+  <!-- A: EXECUTIVE SUMMARY -->
+  <section class="section" id="summary">
+    <div class="section-label">A · Executive Summary</div>
+    <h2 class="section-title">What this system is</h2>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Diagnostic passes</div>
+        <div class="stat-value">2</div>
+        <div class="stat-note">Instruction-level + KB-level</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Evaluation dimensions</div>
+        <div class="stat-value">9</div>
+        <div class="stat-note">Structural risk indicators</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Risk classification</div>
+        <div class="stat-value">Qualitative</div>
+        <div class="stat-note">No numerical scoring</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Platform scope</div>
+        <div class="stat-value">LLM-agnostic</div>
+        <div class="stat-note">OpenAI, Claude, Gemini, open-source</div>
+      </div>
+    </div>
+
+    <p>AIDT is a structured diagnostic framework that evaluates AI agent configurations — system prompts, role definitions, knowledge bases, and guardrails — for structural conditions that make hallucination more likely. It operates at the configuration level, before or after deployment, and produces findings based on observable design patterns rather than runtime outputs.</p>
+    <p>The core premise: hallucination risk is not solely a model-capability problem. It is often a configuration problem. Unclear authority framing, missing refusal logic, scope-to-KB misalignment, and excessive completion pressure are structural conditions that increase unreliable behavior regardless of model capability. AIDT makes these conditions visible.</p>
+    <p>Output is a structured diagnostic report — qualitative risk classification, itemized findings, and a visibility-oriented checklist. All interpretation and action remain with the human operator.</p>
+  </section>
+
+  <!-- B: PROBLEM & BASELINE -->
+  <section class="section" id="problem">
+    <div class="section-label">B · Problem &amp; Baseline</div>
+    <h2 class="section-title">What was missing before</h2>
+
+    <p>AI agents are typically evaluated through informal testing, user feedback, or post-deployment observation. When unreliable behavior surfaces — overconfident answers, hallucinated details, inconsistent refusals — the response is often to blame the model, adjust prompts by intuition, or add examples without addressing root causes.</p>
+    <p>This creates a recurring pattern: agents are built, deployed, and observed to behave unexpectedly, without any structured framework for identifying what in the configuration contributed to the problem. Teams commonly overlooked instruction conflicts, assumed retrieval-augmented knowledge bases automatically resolved grounding gaps, and had no systematic way to assess whether the configuration itself was asking the model to do more than its structure could support.</p>
+
+    <div class="two-col">
+      <div class="col-block">
+        <div class="col-block-title">Common baseline conditions</div>
+        <ul>
+          <li>Hallucination attributed to model, not configuration</li>
+          <li>No review of scope-to-KB alignment</li>
+          <li>Refusal logic absent or undefined</li>
+          <li>Authority framing unchecked</li>
+          <li>Instruction conflicts undetected</li>
+          <li>Human review points unspecified</li>
+          <li>Diagnostics inconsistent across projects</li>
+        </ul>
+      </div>
+      <div class="col-block">
+        <div class="col-block-title">Resulting failure patterns</div>
+        <ul>
+          <li>Overconfident agents in high-stakes responses</li>
+          <li>Agents inferring content beyond KB coverage</li>
+          <li>Expert framing without grounded support</li>
+          <li>Unpredictable behavior after instruction changes</li>
+          <li>Trial-and-error refinement cycles</li>
+          <li>No documented rationale for configuration decisions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">Core framing</div>
+      <p>Hallucination in instruction-configured agents is often a structural problem, not a model-capability problem. More capable models still hallucinate when configuration conditions push them toward it.</p>
+    </div>
+  </section>
+
+  <!-- C: OBJECTIVES & NON-GOALS -->
+  <section class="section" id="objectives">
+    <div class="section-label">C · Objectives &amp; Non-Goals</div>
+    <h2 class="section-title">What this system is designed to do</h2>
+
+    <p>AIDT is designed to improve visibility into structural risk conditions at the configuration level — before or after deployment. The goal is not to eliminate risk, but to make it inspectable, nameable, and actionable by the human operator.</p>
+
+    <div class="two-col">
+      <div class="col-block include">
+        <div class="col-block-title">Design objectives</div>
+        <ul>
+          <li>Surface structural causes of hallucination risk</li>
+          <li>Produce consistent diagnostic structure across agent platforms</li>
+          <li>Identify gaps between declared scope and KB coverage</li>
+          <li>Flag missing refusal logic and uncertainty handling</li>
+          <li>Reveal instruction conflicts and authority misalignment</li>
+          <li>Support human judgment — not replace it</li>
+          <li>Produce partial diagnostics when inputs are incomplete</li>
+        </ul>
+      </div>
+      <div class="col-block exclude">
+        <div class="col-block-title">Explicit non-goals</div>
+        <ul>
+          <li>Does not detect hallucinations in generated outputs</li>
+          <li>Does not monitor runtime behavior</li>
+          <li>Does not guarantee correctness or safety</li>
+          <li>Does not benchmark or compare models</li>
+          <li>Does not rewrite or optimize prompts</li>
+          <li>Does not act as a governance or compliance layer</li>
+          <li>Does not produce numerical risk scores</li>
+          <li>Does not grant deployment approval</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title">Authority boundary</div>
+      <p>AIDT does not determine whether an agent is safe, compliant, or fit for use. A "Low Risk" classification describes observed configuration conditions — it does not constitute approval. All deployment decisions remain entirely human-owned.</p>
+    </div>
+  </section>
+
+  <!-- D: SYSTEM DESIGN -->
+  <section class="section" id="design">
+    <div class="section-label">D · System Design &amp; Workflow</div>
+    <h2 class="section-title">How the diagnostic runs</h2>
+
+    <p>The system operates as a two-pass diagnostic over inspectable configuration artifacts. Each pass examines a distinct layer of the agent's design. Findings from both passes inform the final structured report.</p>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-number-col">
+          <div class="step-number">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag tag-input">Input</div>
+          <div class="step-title">Configuration artifacts provided</div>
+          <p class="step-desc">Agent instructions, system prompts, role definitions, KB documents or summaries, declared assumptions. Partial inputs are accepted — gaps are acknowledged explicitly and may produce ⚠️ Unknown Risk.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-number-col">
+          <div class="step-number">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag tag-process">Pass 1</div>
+          <div class="step-title">Instruction-level diagnostic</div>
+          <p class="step-desc">Evaluates goal clarity, role and authority framing, scope boundaries, instruction density and internal conflicts, autonomy vs human-in-the-loop signaling, and presence of refusal and uncertainty handling. Findings are tied to observable instruction patterns only.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-number-col">
+          <div class="step-number">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag tag-process">Pass 2</div>
+          <div class="step-title">Knowledge base diagnostic</div>
+          <p class="step-desc">Evaluates KB coverage relative to declared scope, alignment between instructions and KB content, internal KB coherence, and authority signaling within KBs. Assesses structural support — not factual correctness of KB content.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-number-col">
+          <div class="step-number">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag tag-output">Output</div>
+          <div class="step-title">Structured diagnostic report</div>
+          <p class="step-desc">Executive summary · Risk interpretation note · Itemized findings (each with configuration evidence) · Preventive action checklist (visibility-oriented, not prescriptive) · Optional educational follow-up if explicitly requested.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-number-col">
+          <div class="step-number">5</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag tag-human">Human review</div>
+          <div class="step-title">Operator interprets and decides</div>
+          <p class="step-desc">After findings are produced and before any configuration changes or deployment decisions are made. AIDT does not act on its own findings.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- E: GUARDRAILS -->
+  <section class="section" id="guardrails">
+    <div class="section-label">E · Rules, Constraints &amp; Guardrails</div>
+    <h2 class="section-title">What the system must and must not do</h2>
+
+    <div class="two-col">
+      <div class="col-block include">
+        <div class="col-block-title">Hard rules — always</div>
+        <ul>
+          <li>Analyze inputs only as provided</li>
+          <li>Acknowledge gaps explicitly</li>
+          <li>Use only the four allowed risk labels</li>
+          <li>State that risk labels are descriptive, not prescriptive</li>
+          <li>Treat partial diagnostics as valid outcomes</li>
+          <li>Include a Risk Interpretation Note in every report</li>
+        </ul>
+      </div>
+      <div class="col-block exclude">
+        <div class="col-block-title">Hard prohibitions — never</div>
+        <ul>
+          <li>Invent missing KB content</li>
+          <li>Infer hidden system behavior</li>
+          <li>Diagnose non-inspectable systems</li>
+          <li>Promise reliability or correctness guarantees</li>
+          <li>Prescribe fixes unless explicitly requested</li>
+          <li>Use numerical scores or probability estimates</li>
+          <li>Imply deployment approval</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top: 1.25rem;">Risk classification follows a fixed vocabulary. Labels are assigned based on observable configuration conditions — they describe structural patterns, not agent performance or model quality.</p>
+
+    <div class="risk-grid">
+      <div class="risk-pill risk-low">
+        <span class="risk-icon">🟢</span>
+        <span class="risk-label">Low Risk</span>
+        <span class="risk-desc">Configuration patterns indicate well-bounded, grounded design.</span>
+      </div>
+      <div class="risk-pill risk-mod">
+        <span class="risk-icon">🟠</span>
+        <span class="risk-label">Moderate Risk</span>
+        <span class="risk-desc">Issues present — may reflect intentional design trade-offs, not errors.</span>
+      </div>
+      <div class="risk-pill risk-high">
+        <span class="risk-icon">🔴</span>
+        <span class="risk-label">High Risk</span>
+        <span class="risk-desc">Structural conditions that increase hallucination risk materially.</span>
+      </div>
+      <div class="risk-pill risk-unk">
+        <span class="risk-icon">⚠️</span>
+        <span class="risk-label">Unknown Risk</span>
+        <span class="risk-desc">Inputs insufficient for confident classification.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- F: ROLES -->
+  <section class="section" id="roles">
+    <div class="section-label">F · Role of AI vs Deterministic Logic vs Human</div>
+    <h2 class="section-title">Who does what, and why</h2>
+
+    <table class="role-table">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Who handles it</th>
+          <th>Reason for assignment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Qualitative pattern analysis of instructions</td>
+          <td class="actor actor-ai">AI (language model)</td>
+          <td>Requires contextual interpretation of meaning and intent across unstructured text</td>
+        </tr>
+        <tr>
+          <td>Comparing declared scope vs KB coverage</td>
+          <td class="actor actor-ai">AI (language model)</td>
+          <td>Requires semantic matching across different document types and abstraction levels</td>
+        </tr>
+        <tr>
+          <td>Identifying structural risk indicators</td>
+          <td class="actor actor-ai">AI (language model)</td>
+          <td>Patterns are qualitative and context-dependent — not reducible to fixed rules</td>
+        </tr>
+        <tr>
+          <td>Generating structured diagnostic reports</td>
+          <td class="actor actor-ai">AI (language model)</td>
+          <td>Requires synthesis of findings across multiple dimensions into coherent narrative</td>
+        </tr>
+        <tr>
+          <td>Enforcing allowed risk labels</td>
+          <td class="actor actor-rule">Deterministic rules</td>
+          <td>Fixed vocabulary prevents label drift and ensures consistent output format</td>
+        </tr>
+        <tr>
+          <td>Maintaining report structure</td>
+          <td class="actor actor-rule">Deterministic rules</td>
+          <td>Consistent format supports auditable, comparable outputs across runs</td>
+        </tr>
+        <tr>
+          <td>Enforcing non-prescriptive behavior</td>
+          <td class="actor actor-rule">Deterministic rules</td>
+          <td>Prevents checklist from becoming enforcement — a core design constraint</td>
+        </tr>
+        <tr>
+          <td>Sequencing diagnostic passes</td>
+          <td class="actor actor-rule">Deterministic rules</td>
+          <td>Instruction analysis must precede KB analysis for correct dependency order</td>
+        </tr>
+        <tr>
+          <td>Interpreting trade-offs and findings</td>
+          <td class="actor actor-human">Human operator</td>
+          <td>Risk tolerance is context-dependent and organizationally owned — not delegable</td>
+        </tr>
+        <tr>
+          <td>Deployment decisions</td>
+          <td class="actor actor-human">Human operator</td>
+          <td>AIDT informs hesitation — it does not grant permission</td>
+        </tr>
+        <tr>
+          <td>KB validation and remediation</td>
+          <td class="actor actor-human">Human operator</td>
+          <td>Factual correctness of KB content is outside the diagnostic scope</td>
+        </tr>
+        <tr>
+          <td>Operational risk acceptance</td>
+          <td class="actor actor-human">Human operator</td>
+          <td>Organizations vary in risk tolerance — no diagnostic can own that judgment</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- G: EVALUATION LOGIC -->
+  <section class="section" id="evaluation">
+    <div class="section-label">G · Evaluation Logic</div>
+    <h2 class="section-title">Diagnostic dimensions and prioritization</h2>
+
+    <p>The diagnostic does not use a numerical scoring system. Instead, findings are organized around nine structural dimensions — the configuration conditions most directly linked to hallucination risk. Each dimension maps to a root cause identified in the system's knowledge base.</p>
+
+    <div class="dimension-list">
+      <div class="dimension-item">
+        <div class="dimension-name">Goal clarity</div>
+        <p class="dimension-why">Ambiguous goals shift decision-making to the model, increasing invented structure.</p>
+      </div>
+      <div class="dimension-item">
+        <div class="dimension-name">Role &amp; authority framing</div>
+        <p class="dimension-why">Overclaimed authority increases pressure to produce confident answers under uncertainty.</p>
+      </div>
+      <div class="dimension-item">
+        <div class="dimension-name">Scope boundaries</div>
+        <p class="dimension-why">Unbounded scope encourages overreach into unsupported content areas.</p>
+      </div>
+      <div class="dimension-item">
+        <div class="dimension-name">Instruction structure &amp; consistency</div>
+        <p class="dimension-why">Conflicting or dense instructions create unstable, unpredictable behavior.</p>
+      </div>
+      <div class="dimension-item">
+        <div class="dimension-name">KB alignment</div>
+        <p class="dimension-why">When scope exceeds KB coverage, models tend to infer or fabricate the gap.</p>
+      </div>
+      <div class="dimension-item">
+        <div class="dimension-name">KB internal coherence</div>
+        <p class="dimension-why">Internal KB conflicts create multiple plausible interpretations, increasing inconsistency.</p>
+      </div>
+      <div class="dimension-item">
+        <div class="dimension-name">Autonomy vs human-in-the-loop</div>
+        <p class="dimension-why">Higher autonomy increases completion pressure and reduces error-correction opportunities.</p>
+      </div>
+      <div class="dimension-item">
+        <div class="dimension-name">Refusal &amp; uncertainty handling</div>
+        <p class="dimension-why">Without refusal conditions, the agent is structurally pushed to always produce an answer.</p>
+      </div>
+      <div class="dimension-item">
+        <div class="dimension-name">Completion pressure</div>
+        <p class="dimension-why">Strong pressure to always deliver complete output is a primary driver of hallucination.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">Prioritization logic</div>
+      <p>Findings are not ranked by severity score. Priority reflects structural impact: findings tied to root causes (ambiguous goals, missing refusal logic, scope-KB misalignment) carry more weight than surface issues. Compounding effects across dimensions — such as high autonomy combined with missing refusal logic — are given elevated attention over isolated issues.</p>
+    </div>
+  </section>
+
+  <!-- H: EVIDENCE -->
+  <section class="section" id="evidence">
+    <div class="section-label">H · Evidence &amp; Observations</div>
+    <h2 class="section-title">What has been observed in use</h2>
+
+    <p>The following observations are drawn from internal use — applying AIDT to evaluate configurations including OverSight and Foresight. Evidence is informal and not formally benchmarked. <span class="evidence-tag">Observed</span></p>
+
+    <div class="two-col">
+      <div class="col-block">
+        <div class="col-block-title">Configurations that produced low-risk findings</div>
+        <ul>
+          <li>Clearly bounded scope with explicit out-of-scope conditions</li>
+          <li>Visible refusal logic for uncertainty cases</li>
+          <li>KB coverage aligned to declared scope</li>
+          <li>Constrained authority framing (no unbounded expertise claims)</li>
+          <li>Defined human review checkpoints</li>
+          <li>Explicit uncertainty handling instructions</li>
+        </ul>
+      </div>
+      <div class="col-block">
+        <div class="col-block-title">Common failure patterns identified</div>
+        <ul>
+          <li>Expert framing without grounded KB support</li>
+          <li>Scope-to-KB coverage gaps</li>
+          <li>Conflicting instructions across passes</li>
+          <li>Excessive completion pressure in role framing</li>
+          <li>Ambiguous goals requiring model inference</li>
+          <li>Hidden assumptions in agent design</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top: 1.25rem;">Applied across internal projects, the diagnostic framework produced more consistent structuring of agent definitions and reduced reliance on trial-and-error during system development. The primary observed value was increased visibility into configuration-level risk before system use — not guaranteed improvement in outputs. <span class="evidence-tag">Observed · Not benchmarked</span></p>
+  </section>
+
+  <!-- I: LIMITATIONS -->
+  <section class="section" id="limitations">
+    <div class="section-label">I · Limitations</div>
+    <h2 class="section-title">What this system cannot do</h2>
+
+    <p>The following constraints are structural — they reflect the diagnostic's scope, not gaps to be closed. They are stated plainly.</p>
+
+    <div class="limitation-list">
+      <div class="limitation-item">Cannot inspect hidden runtime chains, retrieval processes, or live inference behavior.</div>
+      <div class="limitation-item">Cannot verify factual correctness of KB content — KB summaries are treated as declared intent only.</div>
+      <div class="limitation-item">Cannot guarantee safe or reliable outputs — a clean diagnostic does not mean the agent will behave correctly.</div>
+      <div class="limitation-item">Cannot detect every future hallucination scenario — new configurations may introduce risk patterns not yet covered.</div>
+      <div class="limitation-item">Partial inputs reduce certainty. Incomplete configurations may yield ⚠️ Unknown Risk rather than actionable findings.</div>
+      <div class="limitation-item">Runtime behavior may differ materially from configuration analysis — deployment context introduces conditions the diagnostic cannot observe.</div>
+      <div class="limitation-item">Platform-specific safety layers (model-level filters, moderation APIs) are outside scope.</div>
+      <div class="limitation-item">Qualitative risk labels may be interpreted inconsistently across audiences — the tool cannot control how findings are recontextualized by institutional users.</div>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title">Governance risk note</div>
+      <p>A known misuse pattern is treating AIDT as a certification proxy — running the diagnostic and treating the output as evidence of due diligence. AIDT's purpose is to force uncertainty to stay visible, not to resolve it. The risk of authority drift increases in high-stakes deployment contexts and organizations with strong pressure for reassurance.</p>
+    </div>
+  </section>
+
+  <!-- J: STACK -->
+  <section class="section" id="stack">
+    <div class="section-label">J · Technical Stack</div>
+    <h2 class="section-title">Tools and implementation</h2>
+
+    <p>Currently implemented as a Custom GPT on the OpenAI platform. The diagnostic framework is designed to be LLM-agnostic — the two-pass methodology, evaluation dimensions, and output structure are defined independently of the underlying model and can be applied on Claude, Gemini, or open-source systems.</p>
+
+    <div class="kb-grid">
+      <div class="kb-card">
+        <div class="kb-id">KB 1</div>
+        <div class="kb-name">Foundations of Hallucination Risk</div>
+        <p class="kb-role">Structural causes of hallucination in instruction-configured agents</p>
+      </div>
+      <div class="kb-card">
+        <div class="kb-id">KB 2</div>
+        <div class="kb-name">Diagnostic Methodology</div>
+        <p class="kb-role">Two-pass workflow, evaluation dimensions, and prioritization logic</p>
+      </div>
+      <div class="kb-card">
+        <div class="kb-id">KB 3</div>
+        <div class="kb-name">Output Rules &amp; Integrity</div>
+        <p class="kb-role">Risk label definitions, report structure, and prohibited behaviors</p>
+      </div>
+      <div class="kb-card">
+        <div class="kb-id">KB 4</div>
+        <div class="kb-name">Explanatory FAQs &amp; References</div>
+        <p class="kb-role">Educational content — provided only on explicit user request, post-diagnostic</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- K: DEMONSTRATES -->
+  <section class="section" id="demonstrates">
+    <div class="section-label">K · What This Demonstrates</div>
+    <h2 class="section-title">Transferable capabilities</h2>
+
+    <table class="cap-table">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Evidence in this project</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cap-name">AI evaluation workflow design</td>
+          <td>Two-pass diagnostic structure with defined evaluation dimensions, prioritization logic, and output format</td>
+        </tr>
+        <tr>
+          <td class="cap-name">Structured knowledge engineering</td>
+          <td>Four-KB architecture separating foundational theory, methodology, integrity rules, and educational content</td>
+        </tr>
+        <tr>
+          <td class="cap-name">Human-in-the-loop system design</td>
+          <td>All binary decisions remain human-owned; tool explicitly defines what it cannot authorize</td>
+        </tr>
+        <tr>
+          <td class="cap-name">Operational constraint design</td>
+          <td>Hard prohibitions, fixed risk vocabulary, and non-prescriptive output behavior enforced at system level</td>
+        </tr>
+        <tr>
+          <td class="cap-name">Governance and authority boundary thinking</td>
+          <td>Promotion trigger framework, misuse pattern documentation, and explicit non-goal definitions</td>
+        </tr>
+        <tr>
+          <td class="cap-name">Failure mode analysis</td>
+          <td>Known limitation set documented plainly; organizational misuse patterns identified and named</td>
+        </tr>
+        <tr>
+          <td class="cap-name">Cross-platform AI systems thinking</td>
+          <td>Framework designed for LLM-agnostic application — not coupled to a single model or provider</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="roles-callout">
+      <div class="roles-label">Relevant roles</div>
+      <div class="roles-list">
+        <span class="role-tag">AI Workflow Design</span>
+        <span class="role-tag">AI Operations</span>
+        <span class="role-tag">Knowledge Engineering</span>
+        <span class="role-tag">AI Governance</span>
+        <span class="role-tag">Evaluation Systems</span>
+        <span class="role-tag">AI Systems Architecture</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="doc-footer">
+    <span>AIDT · Portfolio Documentation · May 2026 · For CV and application use</span>
+    <span>Non-authoritative. Descriptive only.</span>
+  </div>
+</footer>
+
+</body>
+</html>
