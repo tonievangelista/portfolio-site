@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OverSight (OS) — Portfolio Summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1D4E89;--blue-light:#D6E4F0;--blue-pale:#EEF4FB;--blue-mid:#4A7DB5;
+    --red:#C0392B;--green:#1E6B3C;--amber:#7D4E00;
+    --grey-100:#F7F6F3;--grey-200:#EDEDEB;--grey-500:#888880;--grey-700:#444440;
+    --ink:#1A1A1A;--bg:#FAF9F6;--white:#FFFFFF;
+    --font-head:'DM Serif Display',Georgia,serif;
+    --font-body:'Lato',sans-serif;
+    --font-mono:'DM Mono','Courier New',monospace;
+    --max:860px;--radius:4px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+  /* ── TOP NAV ── */
+  .topnav{background:var(--blue);padding:0 48px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100;}
+  .topnav-brand{font-family:var(--font-head);font-size:18px;color:var(--white);}
+  .topnav-links{display:flex;gap:24px;}
+  .topnav-links a{font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,0.6);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.15s;}
+  .topnav-links a:hover{color:var(--white);}
+  .topnav-links a.active-page{color:var(--white);border-bottom:2px solid rgba(255,255,255,0.4);padding-bottom:2px;}
+
+  /* ── HERO ── */
+  .hero{background:var(--blue);padding:80px 48px 64px;position:relative;overflow:hidden;}
+  .hero::after{content:'';position:absolute;bottom:-60px;right:-60px;width:320px;height:320px;border:60px solid rgba(255,255,255,0.04);border-radius:50%;pointer-events:none;}
+  .hero-eyebrow{font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px;}
+  .hero h1{font-family:var(--font-head);font-size:52px;color:var(--white);line-height:1.05;margin-bottom:16px;}
+  .hero-desc{font-size:17px;color:rgba(255,255,255,0.7);max-width:540px;font-weight:300;line-height:1.6;margin-bottom:32px;}
+  .hero-cta{display:inline-block;font-family:var(--font-mono);font-size:12px;color:var(--white);background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);padding:9px 20px;border-radius:var(--radius);text-decoration:none;transition:all 0.15s;letter-spacing:0.04em;}
+  .hero-cta:hover{background:rgba(255,255,255,0.2);}
+
+  /* ── MAIN ── */
+  .page{max-width:var(--max);margin:0 auto;padding:0 48px 80px;}
+
+  /* ── STAT STRIP ── */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--grey-200);border:1px solid var(--grey-200);border-radius:var(--radius);overflow:hidden;margin:48px 0 0;}
+  .stat{background:var(--white);padding:20px 20px 18px;text-align:center;}
+  .stat-v{font-family:var(--font-mono);font-size:20px;font-weight:500;color:var(--blue);display:block;margin-bottom:4px;}
+  .stat-l{font-size:11px;color:var(--grey-500);text-transform:uppercase;letter-spacing:0.06em;}
+
+  /* ── SECTION LABEL ── */
+  .sec-head{display:flex;align-items:center;gap:10px;margin:52px 0 16px;padding-bottom:10px;border-bottom:2px solid var(--blue);}
+  .sec-head .label{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--blue);letter-spacing:0.1em;text-transform:uppercase;}
+
+  /* ── BODY TEXT ── */
+  p{color:var(--grey-700);margin-bottom:14px;line-height:1.7;}
+  p.lead{font-size:17px;color:var(--ink);font-weight:400;margin-bottom:18px;}
+
+  /* ── FEATURE GRID ── */
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0;}
+  .feature-card{background:var(--white);border:1px solid var(--grey-200);border-radius:var(--radius);padding:20px;transition:border-color 0.15s,box-shadow 0.15s;}
+  .feature-card:hover{border-color:var(--blue-mid);box-shadow:0 2px 12px rgba(29,78,137,0.08);}
+  .fc-icon{font-size:20px;margin-bottom:10px;display:block;}
+  .fc-title{font-weight:700;font-size:14px;color:var(--ink);margin-bottom:6px;}
+  .fc-desc{font-size:13px;color:var(--grey-500);line-height:1.55;}
+
+  /* ── HOW IT WORKS STEPS ── */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:20px 0;position:relative;}
+  .steps::before{content:'';position:absolute;top:28px;left:calc(12.5% + 8px);right:calc(12.5% + 8px);height:2px;background:var(--blue-light);z-index:0;}
+  .step{text-align:center;padding:0 8px;position:relative;z-index:1;}
+  .step-num{width:36px;height:36px;border-radius:50%;background:var(--blue);color:var(--white);font-family:var(--font-mono);font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+  .step-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+  .step-desc{font-size:11px;color:var(--grey-500);line-height:1.4;}
+
+  /* ── COMPARISON PREVIEW ── */
+  .comparison-strip{background:var(--white);border:1px solid var(--grey-200);border-radius:var(--radius);overflow:hidden;margin:20px 0;}
+  .comp-header{background:var(--blue);padding:14px 20px;display:flex;align-items:center;gap:12px;}
+  .comp-badge{font-family:var(--font-mono);font-size:10px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:2px;padding:2px 8px;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:0.06em;}
+  .comp-title{font-family:var(--font-head);font-size:16px;color:var(--white);}
+  .comp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;font-size:13px;}
+  .comp-cell{padding:10px 16px;border-bottom:1px solid var(--grey-200);border-right:1px solid var(--grey-200);}
+  .comp-cell:nth-child(3n){border-right:none;}
+  .comp-cell.head{background:var(--grey-100);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--grey-700);}
+  .comp-cell.win-a{background:#E8F5EE;font-weight:700;color:var(--green);}
+  .comp-cell.win-b{background:#FFF3CD;font-weight:700;color:var(--amber);}
+
+  /* ── GUARDRAIL ROW ── */
+  .guardrails{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;}
+  .gr-card{border-radius:var(--radius);padding:18px 20px;}
+  .gr-card.does{background:var(--blue-pale);border-left:3px solid var(--blue);}
+  .gr-card.doesnt{background:#FFF3CD;border-left:3px solid #E65100;}
+  .gr-title{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;}
+  .gr-card.does .gr-title{color:var(--blue);}
+  .gr-card.doesnt .gr-title{color:#7D4E00;}
+  .gr-list{list-style:none;padding:0;}
+  .gr-list li{font-size:13px;color:var(--grey-700);padding:3px 0 3px 14px;position:relative;}
+  .gr-list li::before{content:'✓';position:absolute;left:0;font-size:11px;}
+  .gr-card.does .gr-list li::before{color:var(--blue);}
+  .gr-card.doesnt .gr-list li::before{content:'✗';color:#E65100;}
+
+  /* ── EVIDENCE ROW ── */
+  .evidence-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0;}
+  .ev-card{background:var(--white);border:1px solid var(--grey-200);border-radius:var(--radius);padding:18px;}
+  .ev-tag{font-family:var(--font-mono);font-size:10px;font-weight:500;padding:2px 8px;border-radius:2px;display:inline-block;margin-bottom:8px;letter-spacing:0.04em;}
+  .ev-tag.validated{background:#E8F5EE;color:var(--green);}
+  .ev-tag.observed{background:#FFF3CD;color:var(--amber);}
+  .ev-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+  .ev-desc{font-size:12px;color:var(--grey-500);line-height:1.5;}
+
+  /* ── SKILLS ── */
+  .skills{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0;}
+  .skill{font-family:var(--font-mono);font-size:12px;padding:6px 14px;background:var(--white);border:1.5px solid var(--blue);border-radius:var(--radius);color:var(--blue);}
+
+  /* ── DEEP DIVE CTA ── */
+  .deep-dive{background:var(--blue);border-radius:var(--radius);padding:32px 36px;display:flex;align-items:center;justify-content:space-between;margin-top:52px;gap:24px;}
+  .dd-text h3{font-family:var(--font-head);font-size:22px;color:var(--white);margin-bottom:6px;}
+  .dd-text p{font-size:14px;color:rgba(255,255,255,0.6);margin:0;max-width:420px;}
+  .dd-btn{white-space:nowrap;font-family:var(--font-mono);font-size:12px;padding:12px 24px;background:var(--white);color:var(--blue);border-radius:var(--radius);text-decoration:none;font-weight:500;transition:opacity 0.15s;letter-spacing:0.04em;}
+  .dd-btn:hover{opacity:0.85;}
+
+  /* ── FOOTER ── */
+  footer{border-top:1px solid var(--grey-200);padding:24px 48px;font-family:var(--font-mono);font-size:11px;color:var(--grey-500);letter-spacing:0.05em;text-align:center;margin-top:48px;}
+
+  /* ── ANIMATIONS ── */
+  .fade-up{opacity:0;transform:translateY(16px);animation:fadeUp 0.5s ease forwards;}
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+  .fade-up:nth-child(1){animation-delay:0.05s}.fade-up:nth-child(2){animation-delay:0.12s}.fade-up:nth-child(3){animation-delay:0.19s}.fade-up:nth-child(4){animation-delay:0.26s}.fade-up:nth-child(5){animation-delay:0.33s}.fade-up:nth-child(6){animation-delay:0.40s}.fade-up:nth-child(7){animation-delay:0.47s}.fade-up:nth-child(8){animation-delay:0.54s}
+
+  @media(max-width:760px){
+    .topnav{padding:0 20px;}.page{padding:0 20px 60px;}
+    .hero{padding:52px 20px 48px;}.hero h1{font-size:36px;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .feature-grid,.steps,.guardrails,.evidence-row{grid-template-columns:1fr;}
+    .steps::before{display:none;}
+    .comp-grid{grid-template-columns:1fr;}.comp-cell:nth-child(3n){border-right:none;}
+    .deep-dive{flex-direction:column;align-items:flex-start;}
+    footer{padding:20px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <span class="topnav-brand">OverSight (OS)</span>
+  <div class="topnav-links">
+    <a href="OverSight_Summary.html" class="active-page">Summary</a>
+    <a href="OverSight_Portfolio_Full.html">Full Documentation →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div style="max-width:var(--max);margin:0 auto;padding:0 0;">
+    <div class="hero-eyebrow">Portfolio · AI Systems · UK Property Investment</div>
+    <h1>OverSight (OS)</h1>
+    <p class="hero-desc">A structured AI-assisted workflow system for property investment analysis — built to enforce analytical discipline, surface risk early, and support human decision-making before capital is deployed.</p>
+    <a href="OverSight_Portfolio_Full.html" class="hero-cta">Read full technical documentation →</a>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- STATS -->
+  <div class="stats fade-up">
+    <div class="stat"><span class="stat-v">Nov 2025</span><span class="stat-l">Build started</span></div>
+    <div class="stat"><span class="stat-v">Jan 2026</span><span class="stat-l">System stabilised</span></div>
+    <div class="stat"><span class="stat-v">11 stages</span><span class="stat-l">Mandatory workflow</span></div>
+    <div class="stat"><span class="stat-v">14 packs</span><span class="stat-l">Knowledge modules</span></div>
+  </div>
+
+  <!-- WHAT IT IS -->
+  <div class="fade-up">
+    <div class="sec-head"><span class="label">What it is</span></div>
+    <p class="lead">OverSight replaces fragmented spreadsheet-based property analysis with a single, sequenced decision-support workflow that combines due diligence, HMO feasibility, refurbishment modelling, ROI calculation, and offer ceiling logic.</p>
+    <p>The system does not produce outputs and then ask humans to interpret them. It enforces the conditions under which outputs can be trusted — evidence first, risk visible, sequencing mandatory. Every analytical stage must complete before the next begins.</p>
+    <p>It was built to solve a specific operational problem: investment decisions were being made with incomplete due diligence, inconsistent assumptions, and no enforced analytical order. OverSight makes it structurally difficult to reach an offer decision before the groundwork has been done.</p>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="fade-up">
+    <div class="sec-head"><span class="label">How it works</span></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Data in</div>
+        <div class="step-desc">Listing, floorplan, EPC, comparables, licensing context. Missing inputs flagged immediately.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2–6</div>
+        <div class="step-title">DD &amp; feasibility</div>
+        <div class="step-desc">10-category risk score, HMO layout assessment, kill-switch checks. Gated — cannot skip.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">7–10</div>
+        <div class="step-title">Financial modelling</div>
+        <div class="step-desc">Refurb costs, ROI scenarios, BRRRR modelling, stress tests. Fixed formulas only.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">11</div>
+        <div class="step-title">MAO → Human</div>
+        <div class="step-desc">Offer ceiling calculated. All negotiation, legal, and acquisition steps owned by humans.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY FEATURES -->
+  <div class="fade-up">
+    <div class="sec-head"><span class="label">Key capabilities</span></div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="fc-icon">🔒</span>
+        <div class="fc-title">Kill-switch enforcement</div>
+        <div class="fc-desc">8 hard-stop conditions that halt analysis unconditionally — Article 4, structural failure, fire safety, flood risk. No AI reasoning involved.</div>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">📉</span>
+        <div class="fc-title">Confidence downgrade logic</div>
+        <div class="fc-desc">Missing data doesn't stop the analysis — it reduces confidence, widens uncertainty bands, and tightens the offer ceiling throughout the pipeline.</div>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">🧮</span>
+        <div class="fc-title">Deterministic financial engine</div>
+        <div class="fc-desc">SDLT, ROI, BRRRR, and refinance calculations use fixed tiered formulas. Validated against partners' Excel model across three evaluated deals.</div>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">⚖️</span>
+        <div class="fc-title">Multi-pillar MAO</div>
+        <div class="fc-desc">Maximum Acceptable Offer derived from 7 independent pillars. Output is the minimum safe value across all — not an average, not a target.</div>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">🔀</span>
+        <div class="fc-title">Deal comparison engine</div>
+        <div class="fc-desc">Normalises and ranks multiple properties across 12 criteria. Separates investment performance from defensive hold quality.</div>
+      </div>
+      <div class="feature-card">
+        <span class="fc-icon">👤</span>
+        <div class="fc-title">Human-in-the-loop design</div>
+        <div class="fc-desc">Explicit human gates at every decision point. Kill-switch overrides require human acknowledgement. Final decisions never owned by the system.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT IT DOES / DOESN'T -->
+  <div class="fade-up">
+    <div class="sec-head"><span class="label">Scope &amp; boundaries</span></div>
+    <div class="guardrails">
+      <div class="gr-card does">
+        <div class="gr-title">The system does</div>
+        <ul class="gr-list">
+          <li>Enforce a mandatory 11-stage analysis sequence</li>
+          <li>Score due diligence risk across 10 categories</li>
+          <li>Assess HMO layout feasibility with confidence labels</li>
+          <li>Calculate ROI, BRRRR, and SDLT using fixed formulas</li>
+          <li>Produce a conservative, multi-pillar offer ceiling</li>
+          <li>Flag and propagate missing data as risk</li>
+          <li>Compare and rank multiple properties consistently</li>
+        </ul>
+      </div>
+      <div class="gr-card doesnt">
+        <div class="gr-title">The system does not</div>
+        <ul class="gr-list">
+          <li>Approve, authorise, or execute investment decisions</li>
+          <li>Provide legal, tax, or regulated financial advice</li>
+          <li>Replace surveyors, solicitors, or valuers</li>
+          <li>Guarantee ROI, refinance outcomes, or profitability</li>
+          <li>Verify licensing or planning decisions in real time</li>
+          <li>Make autonomous decisions of any kind</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON PREVIEW -->
+  <div class="fade-up">
+    <div class="sec-head"><span class="label">Comparison engine — real example</span></div>
+    <p>Two live deals evaluated with identical underwriting assumptions. The engine separated investment performance from defensive quality rather than producing a single ranking.</p>
+    <div class="comparison-strip">
+      <div class="comp-header">
+        <span class="comp-badge">Real comparison</span>
+        <span class="comp-title">Mansfield NG18 vs Gateshead NE9 — 4-bed HMO BRRRR</span>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-cell head">Metric</div>
+        <div class="comp-cell head">Mansfield</div>
+        <div class="comp-cell head">Gateshead</div>
+        <div class="comp-cell">Cash left in</div>
+        <div class="comp-cell win-a">£38,286 ✓</div>
+        <div class="comp-cell">£50,357</div>
+        <div class="comp-cell">ROI on cash left in</div>
+        <div class="comp-cell win-a">32.2% ✓</div>
+        <div class="comp-cell">25.9%</div>
+        <div class="comp-cell">Monthly net income</div>
+        <div class="comp-cell">£1,028</div>
+        <div class="comp-cell win-b">£1,088 ✓</div>
+        <div class="comp-cell">Area / exit quality</div>
+        <div class="comp-cell">Moderate</div>
+        <div class="comp-cell win-b">Strong ✓</div>
+        <div class="comp-cell">Verdict</div>
+        <div class="comp-cell win-a">Chase — better BRRRR</div>
+        <div class="comp-cell win-b">Defensive hold only</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVIDENCE -->
+  <div class="fade-up">
+    <div class="sec-head"><span class="label">Evidence</span></div>
+    <div class="evidence-row">
+      <div class="ev-card">
+        <span class="ev-tag validated">Validated — 3 cases</span>
+        <div class="ev-title">Financial output parity</div>
+        <div class="ev-desc">ROI, SDLT, and cash-left-in outputs matched partners' Excel model within rounding differences across three evaluated deals.</div>
+      </div>
+      <div class="ev-card">
+        <span class="ev-tag observed">Observed</span>
+        <div class="ev-title">Sequencing discipline</div>
+        <div class="ev-desc">Operators consistently reach financial modelling with DD and feasibility already resolved — not after the fact.</div>
+      </div>
+      <div class="ev-card">
+        <span class="ev-tag observed">Observed</span>
+        <div class="ev-title">Optimism reduction</div>
+        <div class="ev-desc">Confidence downgrade logic consistently produces more conservative rent and cost assumptions than prior manual process.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT THIS SHOWS -->
+  <div class="fade-up">
+    <div class="sec-head"><span class="label">What this demonstrates</span></div>
+    <p>Beneath the property domain, OverSight is a workflow orchestration and evaluation system — the same design patterns apply to any high-stakes, data-incomplete, human-supervised decision environment.</p>
+    <div class="skills">
+      <span class="skill">AI Workflow Design</span>
+      <span class="skill">Evaluation System Design</span>
+      <span class="skill">Rule-based Constraint Logic</span>
+      <span class="skill">Human-in-the-Loop Architecture</span>
+      <span class="skill">Structured AI Instruction Design</span>
+      <span class="skill">Knowledge Engineering</span>
+      <span class="skill">Failure Mode Handling</span>
+      <span class="skill">AI Governance &amp; Documentation</span>
+    </div>
+    <p style="margin-top:16px;font-size:14px;color:var(--grey-500);">Relevant roles: AI Workflow Designer · AI Operations Specialist · AI Systems Builder · Knowledge Engineer · Evaluation Systems Designer</p>
+  </div>
+
+  <!-- DEEP DIVE CTA -->
+  <div class="deep-dive fade-up">
+    <div class="dd-text">
+      <h3>Want the full technical detail?</h3>
+      <p>The full documentation covers system architecture, all 11 workflow stages, kill-switch logic, evaluation framework, worked examples, and limitations — written for technical reviewers.</p>
+    </div>
+    <a href="OverSight_Portfolio_Full.html" class="dd-btn">Read full documentation →</a>
+  </div>
+
+</div>
+
+<footer>OverSight (OS) &nbsp;·&nbsp; Portfolio Documentation &nbsp;·&nbsp; January 2026 &nbsp;·&nbsp; For CV and application use</footer>
+
+</body>
+</html>

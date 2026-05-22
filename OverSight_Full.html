@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OverSight (OS) — Portfolio Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:#1D4E89;--blue-light:#D6E4F0;--blue-mid:#4A7DB5;--blue-pale:#EEF4FB;
+    --red:#C0392B;--red-light:#FDECEA;--green:#1E6B3C;--green-light:#E8F5EE;
+    --amber:#7D4E00;--amber-light:#FFF3CD;
+    --grey-100:#F7F6F3;--grey-200:#EDEDEB;--grey-500:#888880;--grey-700:#444440;
+    --ink:#1A1A1A;--bg:#FAF9F6;--white:#FFFFFF;
+    --font-head:'DM Serif Display',Georgia,serif;
+    --font-body:'Lato',sans-serif;
+    --font-mono:'DM Mono','Courier New',monospace;
+    --radius:4px;--shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(29,78,137,0.06);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+  .sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:var(--blue);padding:32px 0;overflow-y:auto;z-index:100;display:flex;flex-direction:column;}
+  .sidebar-logo{padding:0 24px 28px;border-bottom:1px solid rgba(255,255,255,0.15);margin-bottom:20px;}
+  .sidebar-logo .sys-name{font-family:var(--font-head);font-size:20px;color:var(--white);display:block;line-height:1.2;}
+  .sidebar-logo .sys-sub{font-family:var(--font-mono);font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:0.08em;text-transform:uppercase;margin-top:6px;display:block;}
+  .nav-list{list-style:none;padding:0 12px;flex:1;}
+  .nav-list li a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);text-decoration:none;font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,0.65);letter-spacing:0.03em;transition:background 0.15s,color 0.15s;}
+  .nav-list li a:hover,.nav-list li a.active{background:rgba(255,255,255,0.12);color:var(--white);}
+  .nav-list li a .nav-key{font-weight:500;color:rgba(255,255,255,0.4);min-width:14px;}
+  .nav-list li a:hover .nav-key,.nav-list li a.active .nav-key{color:rgba(255,255,255,0.7);}
+  .sidebar-footer{padding:20px 24px 0;border-top:1px solid rgba(255,255,255,0.1);font-family:var(--font-mono);font-size:10px;color:rgba(255,255,255,0.3);line-height:1.6;}
+
+  .main{margin-left:220px;min-height:100vh;}
+
+  .hero{background:var(--blue);padding:72px 64px 56px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);pointer-events:none;}
+  .hero-label{font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:16px;}
+  .hero h1{font-family:var(--font-head);font-size:56px;color:var(--white);line-height:1.05;margin-bottom:12px;letter-spacing:-0.01em;}
+  .hero-subtitle{font-size:18px;color:rgba(255,255,255,0.65);font-weight:300;margin-bottom:40px;max-width:560px;line-height:1.5;}
+  .hero-short-link{display:inline-block;margin-top:4px;font-family:var(--font-mono);font-size:12px;color:rgba(255,255,255,0.5);text-decoration:none;border:1px solid rgba(255,255,255,0.2);padding:6px 14px;border-radius:var(--radius);transition:all 0.15s;}
+  .hero-short-link:hover{background:rgba(255,255,255,0.1);color:var(--white);}
+
+  .stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:40px;border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius);overflow:hidden;}
+  .stat-card{background:rgba(255,255,255,0.07);padding:20px 24px;text-align:center;border-right:1px solid rgba(255,255,255,0.08);}
+  .stat-card:last-child{border-right:none;}
+  .stat-value{font-family:var(--font-mono);font-size:22px;font-weight:500;color:var(--white);display:block;margin-bottom:4px;}
+  .stat-label{font-size:11px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em;}
+
+  .content{padding:0 64px 80px;}
+  .section{padding-top:64px;padding-bottom:8px;opacity:0;transform:translateY(18px);animation:fadeUp 0.5s ease forwards;}
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+  .section:nth-child(1){animation-delay:0.05s}.section:nth-child(2){animation-delay:0.10s}.section:nth-child(3){animation-delay:0.15s}.section:nth-child(4){animation-delay:0.20s}.section:nth-child(5){animation-delay:0.25s}.section:nth-child(6){animation-delay:0.30s}.section:nth-child(7){animation-delay:0.35s}.section:nth-child(8){animation-delay:0.40s}.section:nth-child(9){animation-delay:0.45s}.section:nth-child(10){animation-delay:0.50s}.section:nth-child(11){animation-delay:0.55s}
+
+  .section-label{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--blue);letter-spacing:0.12em;text-transform:uppercase;padding-bottom:12px;border-bottom:2px solid var(--blue);margin-bottom:28px;display:flex;align-items:center;gap:10px;}
+  .section-label .sec-key{background:var(--blue);color:var(--white);padding:2px 7px;border-radius:2px;font-size:10px;}
+  .subheading{font-family:var(--font-body);font-size:14px;font-weight:700;color:var(--blue);margin-top:36px;margin-bottom:14px;letter-spacing:0.01em;}
+  p.body-text{color:var(--grey-700);margin-bottom:14px;max-width:800px;}
+  p.body-italic{color:var(--grey-500);font-style:italic;font-size:14px;margin-top:12px;max-width:760px;}
+
+  .callout{border-left:4px solid var(--blue);background:var(--blue-pale);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin:20px 0;max-width:820px;}
+  .callout.callout-red{border-left-color:var(--red);background:var(--red-light);}
+  .callout-title{font-weight:700;color:var(--blue);margin-bottom:10px;font-size:14px;}
+  .callout.callout-red .callout-title{color:var(--red);}
+  .callout ul{list-style:none;padding:0;}
+  .callout ul li{padding:4px 0 4px 16px;position:relative;color:var(--grey-700);font-size:14px;}
+  .callout ul li::before{content:'—';position:absolute;left:0;color:var(--blue-mid);font-size:12px;}
+  .callout.callout-red ul li::before{color:var(--red);}
+
+  .tbl-wrap{overflow-x:auto;margin:16px 0 24px;border-radius:var(--radius);box-shadow:var(--shadow);max-width:900px;}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  thead th{background:var(--blue);color:var(--white);font-family:var(--font-body);font-weight:700;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;padding:12px 16px;text-align:left;}
+  thead.red-head th{background:var(--red);}
+  tbody tr:nth-child(even){background:var(--grey-100);}
+  tbody tr:nth-child(odd){background:var(--white);}
+  tbody tr:hover{background:var(--blue-light);transition:background 0.12s;}
+  td{padding:11px 16px;border-bottom:1px solid var(--grey-200);vertical-align:top;color:var(--grey-700);line-height:1.55;}
+  td.td-key{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--blue);white-space:nowrap;}
+  td.td-red{font-weight:700;color:var(--red);}
+  .workflow-num{font-family:var(--font-mono);font-weight:500;font-size:15px;color:var(--blue);text-align:center;}
+  .workflow-title{font-weight:700;color:var(--ink);font-size:14px;}
+
+  .case-study-header{background:var(--blue);color:var(--white);padding:16px 24px;border-radius:var(--radius) var(--radius) 0 0;display:flex;align-items:center;gap:16px;margin-top:24px;max-width:900px;}
+  .case-study-header .cs-badge{font-family:var(--font-mono);font-size:10px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:2px;padding:3px 8px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);white-space:nowrap;}
+  .case-study-header .cs-title{font-family:var(--font-head);font-size:18px;color:var(--white);}
+
+  /* comparison table winner highlights */
+  td.winner-a{background:#E8F5EE !important;font-weight:700;color:var(--green);}
+  td.winner-b{background:#FFF3CD !important;font-weight:700;color:var(--amber);}
+
+  ul.doc-list{list-style:none;padding:0;margin:8px 0 16px;max-width:700px;}
+  ul.doc-list li{padding:5px 0 5px 20px;position:relative;color:var(--grey-700);font-size:14px;border-bottom:1px solid var(--grey-200);}
+  ul.doc-list li:last-child{border-bottom:none;}
+  ul.doc-list li::before{content:'·';position:absolute;left:6px;color:var(--blue-mid);font-size:16px;line-height:1.4;}
+
+  .role-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .role-tag{font-family:var(--font-mono);font-size:12px;padding:7px 14px;background:var(--white);border:1.5px solid var(--blue);border-radius:var(--radius);color:var(--blue);font-weight:500;}
+
+  .doc-footer{margin-top:64px;padding:24px 64px;border-top:2px solid var(--blue-light);font-family:var(--font-mono);font-size:11px;color:var(--grey-500);letter-spacing:0.06em;text-align:center;}
+
+  @media(max-width:900px){
+    .sidebar{display:none;}.main{margin-left:0;}
+    .hero{padding:48px 28px 40px;}.hero h1{font-size:36px;}
+    .content{padding:0 28px 60px;}
+    .stat-cards{grid-template-columns:repeat(2,1fr);}
+    .doc-footer{padding:24px 28px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <span class="sys-name">OverSight</span>
+    <span class="sys-sub">Full Documentation</span>
+  </div>
+  <ul class="nav-list">
+    <li><a href="#sec-a"><span class="nav-key">A</span> Executive Summary</a></li>
+    <li><a href="#sec-b"><span class="nav-key">B</span> Problem &amp; Baseline</a></li>
+    <li><a href="#sec-c"><span class="nav-key">C</span> Objectives &amp; Non-Goals</a></li>
+    <li><a href="#sec-d"><span class="nav-key">D</span> System Design</a></li>
+    <li><a href="#sec-e"><span class="nav-key">E</span> Rules &amp; Guardrails</a></li>
+    <li><a href="#sec-f"><span class="nav-key">F</span> AI vs Logic vs Human</a></li>
+    <li><a href="#sec-g"><span class="nav-key">G</span> Evaluation Logic</a></li>
+    <li><a href="#sec-h"><span class="nav-key">H</span> Evidence &amp; Observations</a></li>
+    <li><a href="#sec-i"><span class="nav-key">I</span> Limitations</a></li>
+    <li><a href="#sec-j"><span class="nav-key">J</span> Technical Stack</a></li>
+    <li><a href="#sec-k"><span class="nav-key">K</span> What This Demonstrates</a></li>
+  </ul>
+  <div class="sidebar-footer">Blueprint v2.7.1<br>Portfolio · Jan 2026<br>For CV &amp; application use</div>
+</nav>
+
+<div class="main">
+  <header class="hero">
+    <div class="hero-label">Full Technical Documentation · UK Property Investment</div>
+    <h1>OverSight (OS)</h1>
+    <p class="hero-subtitle">Structured Property Investment Analysis System — HMO, BRRRR &amp; BTL Due Diligence Workflow</p>
+    <a href="OverSight_Summary.html" class="hero-short-link">→ View recruiter summary (short version)</a>
+    <div class="stat-cards">
+      <div class="stat-card"><span class="stat-value">Nov 2025</span><span class="stat-label">Build started</span></div>
+      <div class="stat-card"><span class="stat-value">Jan 2026</span><span class="stat-label">System stabilised</span></div>
+      <div class="stat-card"><span class="stat-value">11 stages</span><span class="stat-label">Flow v3 steps</span></div>
+      <div class="stat-card"><span class="stat-value">14 packs</span><span class="stat-label">Knowledge modules</span></div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- A -->
+    <section class="section" id="sec-a">
+      <div class="section-label"><span class="sec-key">A</span> Executive Summary</div>
+      <p class="body-text">OverSight is an internal decision-support system built for a UK property investment company to structure, sequence, and constrain the analysis of residential property investments. It combines due diligence scoring, HMO feasibility assessment, refurbishment cost modelling, ROI calculation, and offer ceiling logic into a single mandatory workflow — replacing a fragmented set of spreadsheets, manual checks, and disconnected tools.</p>
+      <p class="body-text">The system is designed for internal operator use when evaluating deals that involve capital deployment, HMO conversion, or compliance uncertainty. Its primary function is not to generate outputs but to enforce the conditions under which outputs can be trusted: evidence must be present, risk must be surfaced before financial conclusions, and every analytical stage must complete before the next begins.</p>
+      <div class="callout">
+        <div class="callout-title">Why this matters</div>
+        <ul>
+          <li>Property investment decisions combine incomplete information, regulatory constraints, market volatility, and irreversible capital deployment. OverSight was designed to reduce decision variance and enforce analytical discipline before offers are made — not to replace human judgment, but to make the preconditions for good judgment consistently visible.</li>
+          <li>OverSight does not approve deals. It determines whether the analytical preconditions for human approval have been met.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- B -->
+    <section class="section" id="sec-b">
+      <div class="section-label"><span class="sec-key">B</span> Problem &amp; Baseline</div>
+      <div class="subheading">The baseline workflow</div>
+      <p class="body-text">Before OverSight, property investment analysis relied on a combination of manual checks across separate tools: listing platforms for comparables, demand data from rental portals, council licensing portals for HMO status, spreadsheet models for ROI, and separate interpretation steps for each output. Each component was functional in isolation but disconnected from the others.</p>
+      <p class="body-text">The result was a process that was cognitively demanding, inconsistently sequenced, and vulnerable to common failure modes: due diligence steps skipped under time pressure, optimistic rent or refurbishment assumptions carried forward without challenge, and offer decisions reached before compliance or layout feasibility had been assessed.</p>
+      <div class="subheading">Recurring failure patterns</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:28%">Failure pattern</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">Premature offers</td><td>Offer calculations started before DD, licensing, or layout analysis was complete</td></tr>
+            <tr><td class="td-key">Assumption carry-forward</td><td>Optimistic rent or cost figures entered early and never revisited</td></tr>
+            <tr><td class="td-key">Missing data ignored</td><td>Gaps in comparables, EPC, or floorplans treated as neutral rather than as risk</td></tr>
+            <tr><td class="td-key">Inconsistent sequencing</td><td>No enforced order; different analysts reached the same stage via different paths</td></tr>
+            <tr><td class="td-key">Underestimated compliance</td><td>EPC upgrade burden, HMO licensing costs, and room-size failures not systematically checked</td></tr>
+            <tr><td class="td-key">Fragmented tooling</td><td>No single place where DD, feasibility, ROI, and offer logic were connected</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- C -->
+    <section class="section" id="sec-c">
+      <div class="section-label"><span class="sec-key">C</span> Objectives &amp; Non-Goals</div>
+      <div class="subheading">Design objectives</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:28%">Objective</th><th>What it addresses</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">Enforce sequencing</td><td>Require DD and feasibility to complete before ROI or offer calculations run</td></tr>
+            <tr><td class="td-key">Surface risk early</td><td>Make compliance, layout, and data-quality risks visible before financial conclusions</td></tr>
+            <tr><td class="td-key">Constrain assumptions</td><td>Replace free-form estimation with rule-based logic and fixed cost references</td></tr>
+            <tr><td class="td-key">Treat missing data as risk</td><td>Reduce confidence and tighten MAO when inputs are absent, rather than proceeding silently</td></tr>
+            <tr><td class="td-key">Support comparison</td><td>Enable consistent ranking across multiple deals using shared evaluation criteria</td></tr>
+            <tr><td class="td-key">Reduce cognitive load</td><td>Consolidate the analytical workflow so operators move from data to decision without switching tools</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="subheading">Non-goals</div>
+      <div class="callout">
+        <div class="callout-title">OverSight explicitly does not:</div>
+        <ul>
+          <li>Approve, authorise, or execute investment decisions</li>
+          <li>Provide legal, tax, or regulated financial advice</li>
+          <li>Replace surveyors, solicitors, valuers, architects, or brokers</li>
+          <li>Guarantee ROI, refinance outcomes, or profitability</li>
+          <li>Verify compliance determinations with councils or lenders in real time</li>
+          <li>Operate as a sourcing or deal-finding tool</li>
+          <li>Make autonomous decisions of any kind</li>
+        </ul>
+      </div>
+      <p class="body-italic">These boundaries are not limitations to be resolved in future versions. They reflect deliberate design choices about where AI-assisted analysis is appropriate and where human judgment, professional advice, or physical inspection remain irreplaceable.</p>
+    </section>
+
+    <!-- D -->
+    <section class="section" id="sec-d">
+      <div class="section-label"><span class="sec-key">D</span> System Design &amp; Workflow</div>
+      <div class="subheading">Architecture overview</div>
+      <p class="body-text">OverSight is built as a layered analytical pipeline governed by a mandatory sequential workflow called Flow v3. The system is organised into 14 named knowledge packs — each responsible for a distinct analytical domain — plus a governing Blueprint layer that defines sequencing rules, kill-switch conditions, source priority hierarchy, authority boundaries, and output constraints.</p>
+      <p class="body-text">The pipeline does not allow later stages to run if earlier stages are incomplete or contain unresolved kill-switch risks. This gate logic is the primary mechanism for preventing premature conclusions.</p>
+      <div class="subheading">Flow v3 — mandatory workflow sequence</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:5%">#</th><th style="width:25%">Stage</th><th>What the system does</th></tr></thead>
+          <tbody>
+            <tr><td class="workflow-num">1</td><td><span class="workflow-title">Setup &amp; Ingestion</span></td><td>Collect required inputs (listing URL, floorplan, EPC, comparables, licensing context). Missing critical inputs are flagged immediately and confidence is reduced.</td></tr>
+            <tr><td class="workflow-num">2</td><td><span class="workflow-title">Due Diligence &amp; Risk Scoring</span></td><td>Score 10 DD categories (0–3 each). Surface kill-switch risks. Assign Green / Amber / Red band. Progression blocked if Red.</td></tr>
+            <tr><td class="workflow-num">3</td><td><span class="workflow-title">HMO Density &amp; Competition</span></td><td>Require licensing register and spatial checks before any HMO assumption is made. Flag oversaturated streets.</td></tr>
+            <tr><td class="workflow-num">4</td><td><span class="workflow-title">Tenant Target Framing</span></td><td>Propose viable tenant profiles with confidence labels based on area, demand evidence, and layout potential.</td></tr>
+            <tr><td class="workflow-num">5</td><td><span class="workflow-title">Value Banding (C3 / As-Is)</span></td><td>Establish value ranges from validated sold comparables. No valuation without comparable evidence.</td></tr>
+            <tr><td class="workflow-num">6</td><td><span class="workflow-title">HMO Feasibility &amp; Layouts</span></td><td>Assess layout options against HMO room-size and compliance rules. Feasibility confidence assigned per option.</td></tr>
+            <tr><td class="workflow-num">7</td><td><span class="workflow-title">Paths &amp; Exits</span></td><td>Define viable investment strategies and alternative exit routes. Multi-path modelling surfaces optionality.</td></tr>
+            <tr><td class="workflow-num">8</td><td><span class="workflow-title">Rents &amp; GDV</span></td><td>Set rent assumptions with confidence bands derived from rental comparables and demand indicators.</td></tr>
+            <tr><td class="workflow-num">9</td><td><span class="workflow-title">Refurb Scope &amp; Costs</span></td><td>Apply mandatory-first refurb logic. Costs derived from fixed cost matrices only — no free-form estimation.</td></tr>
+            <tr><td class="workflow-num">10</td><td><span class="workflow-title">ROI Modelling</span></td><td>Model multiple price cases using defined financial rules. Stress tests applied. Refinance assumptions labelled.</td></tr>
+            <tr><td class="workflow-num">11</td><td><span class="workflow-title">MAO &amp; Offer Strategy</span></td><td>Calculate Maximum Acceptable Offer using multi-pillar logic. Offer ladders and negotiation guidance produced. Output is handed to human operators for all subsequent negotiation, legal, and acquisition steps.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="subheading">Gate logic</div>
+      <p class="body-text">Kill-switch risks detected at Stage 2 halt progression unless a human explicitly acknowledges and overrides. Missing critical inputs at Stage 1 reduce confidence scores and tighten MAO throughout the downstream pipeline — they do not stop analysis entirely, but they remain visible as risk signals in every output.</p>
+    </section>
+
+    <!-- E -->
+    <section class="section" id="sec-e">
+      <div class="section-label"><span class="sec-key">E</span> Rules, Constraints &amp; Guardrails</div>
+      <div class="subheading">Kill-switch conditions</div>
+      <p class="body-text">The following conditions halt or block analysis progression regardless of other inputs:</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead class="red-head"><tr><th style="width:40%">Kill-switch condition</th><th>Reason for block</th></tr></thead>
+          <tbody>
+            <tr><td class="td-red">Article 4 direction + non-compliant layout</td><td>HMO path closed without planning permission</td></tr>
+            <tr><td class="td-red">Impossible or non-compliant escape routes</td><td>Fire safety failure — layout rejected</td></tr>
+            <tr><td class="td-red">Bedroom size failures (HMO standards)</td><td>Layout non-viable under licensing rules</td></tr>
+            <tr><td class="td-red">Severe structural issues or subsidence</td><td>Refurb scope unquantifiable — deal blocked</td></tr>
+            <tr><td class="td-red">Severe damp, rot, or contamination</td><td>Cost uncertainty too high to model reliably</td></tr>
+            <tr><td class="td-red">Unworkable kitchen or utility positioning</td><td>Conversion path not viable</td></tr>
+            <tr><td class="td-red">Flood zone risk (confirmed)</td><td>Exit and refinance risk elevated to unacceptable level</td></tr>
+            <tr><td class="td-red">Oversaturated HMO street</td><td>Rental demand and void risk flagged</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="subheading">Confidence downgrade logic</div>
+      <p class="body-text">When critical inputs are absent or weak — missing floorplan, outdated comparables, no EPC data — the system does not halt. Instead, it reduces the confidence assigned to affected outputs, widens the uncertainty bands on cost and rent estimates, and tightens the MAO ceiling. Missing data remains explicitly visible throughout the workflow rather than being silently carried forward.</p>
+      <div class="subheading">MAO discipline</div>
+      <p class="body-text">The Maximum Acceptable Offer is derived from seven independent pillars: sold comparables, active listings, external valuations, yield logic, GDV/HMO value, risk-adjusted view, and finance limit. The output is the minimum safe value across all pillars — not an average, not a target. MAO cannot be calculated unless ROI modelling is complete.</p>
+    </section>
+
+    <!-- F -->
+    <section class="section" id="sec-f">
+      <div class="section-label"><span class="sec-key">F</span> Role of AI vs Deterministic Logic vs Human</div>
+      <div class="callout">
+        <div class="callout-title">Architecture philosophy</div>
+        <ul>
+          <li>AI-assisted components in OverSight are treated as advisory reasoning layers operating under deterministic constraints — not as autonomous decision-makers. Where judgment is not required, deterministic rule logic applies unconditionally. Where AI reasoning is used, outputs carry confidence labels and remain subject to human review before any action is taken.</li>
+        </ul>
+      </div>
+      <div class="tbl-wrap" style="margin-top:20px">
+        <table>
+          <thead><tr><th style="width:28%">Task</th><th style="width:28%">Handler</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">DD risk scoring</td><td>Deterministic rule-based</td><td>Fixed 0–3 bands per category — no AI judgment involved</td></tr>
+            <tr><td class="td-key">Kill-switch enforcement</td><td>Deterministic</td><td>Rules trigger unconditionally regardless of other context</td></tr>
+            <tr><td class="td-key">Layout feasibility</td><td>AI (pattern reasoning)</td><td>AI interprets floorplan data against compliance criteria; output carries confidence label</td></tr>
+            <tr><td class="td-key">Refurb cost modelling</td><td>Deterministic (fixed matrix)</td><td>Costs derived from pre-defined cost matrix only</td></tr>
+            <tr><td class="td-key">SDLT and ROI calculations</td><td>Deterministic formula</td><td>Fixed tiered band formulas applied — no estimation or inference</td></tr>
+            <tr><td class="td-key">MAO calculation</td><td>Deterministic multi-pillar</td><td>Minimum across seven independent pillars</td></tr>
+            <tr><td class="td-key">Risk commentary</td><td>AI</td><td>AI summarises risk profile and surfaces pattern-level observations</td></tr>
+            <tr><td class="td-key">Comparable interpretation</td><td>AI (with confidence label)</td><td>AI assesses comparables and flags weakness or gaps</td></tr>
+            <tr><td class="td-key">Report drafting</td><td>AI</td><td>AI structures and drafts outputs aligned to defined templates</td></tr>
+            <tr><td class="td-key">Offer strategy framing</td><td>AI</td><td>AI proposes offer ladders and negotiation angles within MAO ceiling</td></tr>
+            <tr><td class="td-key">Final investment decision</td><td>Human</td><td>Explicitly human-owned — system has no authority here</td></tr>
+            <tr><td class="td-key">Compliance sign-off</td><td>Human + professional</td><td>Requires surveyor, solicitor, or licensing authority</td></tr>
+            <tr><td class="td-key">Kill-switch override</td><td>Human (explicit)</td><td>Human must acknowledge and confirm to proceed</td></tr>
+            <tr><td class="td-key">Assumption validation</td><td>Human</td><td>Human confirms or rejects assumptions before offers progress</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- G -->
+    <section class="section" id="sec-g">
+      <div class="section-label"><span class="sec-key">G</span> Evaluation Logic</div>
+      <div class="subheading">DD Risk Scoring Framework</div>
+      <p class="body-text">Ten categories are scored 0–3, producing a total risk score that maps to a banding verdict:</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:30%">DD Category</th><th>What it assesses</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">Location quality</td><td>Access, employment density, regeneration trajectory</td></tr>
+            <tr><td class="td-key">Crime profile</td><td>Area crime data against comparable areas</td></tr>
+            <tr><td class="td-key">Flood &amp; environment</td><td>Flood zone classification and environmental search flags</td></tr>
+            <tr><td class="td-key">Planning &amp; Article 4</td><td>Permitted development rights, Article 4 status, active applications</td></tr>
+            <tr><td class="td-key">HMO licensing</td><td>Licensing requirement, register status, compliance history</td></tr>
+            <tr><td class="td-key">EPC rating</td><td>Current rating, upgrade requirement, cost burden</td></tr>
+            <tr><td class="td-key">Physical condition</td><td>Structural condition, damp, rot, system age</td></tr>
+            <tr><td class="td-key">Layout feasibility</td><td>Room-size compliance, conversion viability, escape routes</td></tr>
+            <tr><td class="td-key">HMO density</td><td>Street-level saturation, void risk, licensing concentration</td></tr>
+            <tr><td class="td-key">Macro risk</td><td>Area volatility, yield compression, market liquidity</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:20%">Score band</th><th>Verdict</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key" style="color:#1E6B3C">0 – 5</td><td>Green — proceed with standard diligence</td></tr>
+            <tr><td class="td-key" style="color:#7D4E00">6 – 12</td><td>Amber — proceed with elevated scrutiny and tighter assumptions</td></tr>
+            <tr><td class="td-key" style="color:var(--red)">13+</td><td>Red — blocked unless human explicitly overrides with documented rationale</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="subheading">Deal Comparison Engine — worked example</div>
+      <p class="body-text">The following comparison was run across two real evaluated properties. All figures use standard underwriting assumptions: 78% LTV, 6.84% interest-only, tiered SDLT, bridging finance at 1.09% monthly over 6 months.</p>
+
+      <div class="case-study-header">
+        <span class="cs-badge">Real comparison</span>
+        <span class="cs-title">Mansfield NG18 vs Gateshead NE9 — 4-bed HMO BRRRR</span>
+      </div>
+      <div class="tbl-wrap" style="margin-top:0;border-top-left-radius:0;border-top-right-radius:0">
+        <table>
+          <thead><tr><th style="width:30%">Metric</th><th style="width:30%">Mansfield NG18</th><th>Gateshead NE9</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">Purchase price</td><td>£100,000</td><td>£175,000</td></tr>
+            <tr><td class="td-key">SDLT (tiered)</td><td>£7,000 <span style="font-size:11px;color:var(--grey-500)">(100% in band 1)</span></td><td>£13,250 <span style="font-size:11px;color:var(--grey-500)">(bands 1+2)</span></td></tr>
+            <tr><td class="td-key">Refurb cost</td><td>£40,000</td><td>£22,000</td></tr>
+            <tr><td class="td-key">Total cash invested</td><td>£160,600</td><td>£231,005</td></tr>
+            <tr><td class="td-key">GDV assumption</td><td>£162,500</td><td>£240,000</td></tr>
+            <tr><td class="td-key">Net refinance received</td><td>£122,314</td><td>£180,648</td></tr>
+            <tr><td class="td-key">Cash left in</td><td class="winner-a">£38,286</td><td>£50,357</td></tr>
+            <tr><td class="td-key">Monthly net income</td><td>£1,028</td><td class="winner-b">£1,088</td></tr>
+            <tr><td class="td-key">Annual net income</td><td>£12,336</td><td class="winner-b">£13,056</td></tr>
+            <tr><td class="td-key">ROI on cash left in</td><td class="winner-a">32.2%</td><td>25.9%</td></tr>
+            <tr><td class="td-key">BRRRR efficiency</td><td class="winner-a">Strong</td><td>Moderate</td></tr>
+            <tr><td class="td-key">Area / exit quality</td><td>Moderate</td><td class="winner-b">Strong</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:40%">Strategic goal</th><th>Best option</th></tr></thead>
+          <tbody>
+            <tr><td>Aggressive portfolio growth / BRRRR recycling</td><td style="font-weight:700;color:var(--green)">Mansfield — Chase</td></tr>
+            <tr><td>Safer long-term hold / exit strength</td><td style="font-weight:700;color:var(--amber)">Gateshead — only below asking with stronger valuation evidence</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="body-italic">This comparison illustrates how the engine separates investment performance from defensive quality — producing a verdict that is strategy-dependent rather than a single ranking.</p>
+
+      <div class="subheading">Comparison Engine criteria</div>
+      <p class="body-text">Full multi-deal comparisons are normalised across 12 criteria:</p>
+      <ul class="doc-list">
+        <li>ROI (modelled)</li><li>Cash-left-in</li><li>DD risk score</li><li>Layout feasibility confidence</li>
+        <li>Rent confidence</li><li>Area confidence</li><li>Macro volatility</li><li>HMO competition density</li>
+        <li>Exit strength</li><li>Refurb complexity</li><li>MAO headroom</li><li>Data quality</li>
+      </ul>
+    </section>
+
+    <!-- H -->
+    <section class="section" id="sec-h">
+      <div class="section-label"><span class="sec-key">H</span> Evidence &amp; Observations</div>
+      <div class="callout">
+        <div class="callout-title">Evidence classification</div>
+        <ul>
+          <li><strong>Validated</strong> — cross-checked against the standard Excel ROI model used by company partners; outputs compared directly across specific cases</li>
+          <li><strong>Observed</strong> — repeatedly noticed during personal use; not formally benchmarked or statistically measured</li>
+          <li><strong>Inferred</strong> — reasonable interpretation from workflow behaviour, not directly measurable</li>
+        </ul>
+      </div>
+      <div class="subheading">Observed and validated system behaviour</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:32%">Observation</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="td-key">Financial output parity<br><span style="font-weight:400;color:#1E6B3C;font-size:11px">[Validated — 3 cases]</span></td>
+              <td>ROI, SDLT, and cash-left-in outputs cross-checked against the partners' standard Excel model across three evaluated deals. Results matched within rounding differences. SDLT tiered band logic verified to produce identical figures to manual calculation.</td>
+            </tr>
+            <tr>
+              <td class="td-key">Sequencing discipline<br><span style="font-weight:400;color:#7D4E00;font-size:11px">[Observed]</span></td>
+              <td>Operators consistently reach financial modelling with DD and feasibility already resolved, rather than running calculations first and checking risk retrospectively.</td>
+            </tr>
+            <tr>
+              <td class="td-key">Comparable transparency<br><span style="font-weight:400;color:#7D4E00;font-size:11px">[Observed]</span></td>
+              <td>Weak or thin comparables are surfaced explicitly rather than silently carried forward; confidence labels make data quality visible at the output stage.</td>
+            </tr>
+            <tr>
+              <td class="td-key">Optimism reduction<br><span style="font-weight:400;color:#7D4E00;font-size:11px">[Observed]</span></td>
+              <td>Multi-path modelling and confidence downgrades produce more conservative rent and cost assumptions than the prior manual process in the cases reviewed.</td>
+            </tr>
+            <tr>
+              <td class="td-key">MAO defensibility<br><span style="font-weight:400;color:#7D4E00;font-size:11px">[Observed]</span></td>
+              <td>Multi-pillar MAO logic produces offer ceilings that can be explained and justified step by step; single-spreadsheet MAO calculations did not provide the same audit trail.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="subheading">Worked example — Liverpool L13, 3-bed to 5-bed HMO BRRRR</div>
+      <p class="body-text">The following shows how OverSight handled a real property evaluation where multiple inputs were missing or uncertain, illustrating confidence downgrade and gating behaviour under realistic conditions.</p>
+      <div class="case-study-header">
+        <span class="cs-badge">Real evaluation</span>
+        <span class="cs-title">Liverpool L13 · 3-bed terraced · Asking £138,000 · Target: 5-bed HMO BRRRR</span>
+      </div>
+      <div class="tbl-wrap" style="margin-top:0;border-top-left-radius:0;border-top-right-radius:0">
+        <table>
+          <thead><tr><th style="width:24%">Stage / Factor</th><th>System response</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">Input state</td><td>Listing URL and photos provided. No floorplan. EPC D confirmed. Article 4 and licensing status unknown. Visible damp reported.</td></tr>
+            <tr><td class="td-key">Stage 1 — Ingestion</td><td>System flagged: no floorplan (critical), Article 4 unknown, licensing unknown, damp unassessed. Confidence set to Low for layout; Medium for area.</td></tr>
+            <tr><td class="td-key">Stage 2 — DD scoring</td><td>Score: 11/30 → Amber band. Layout feasibility scored 3/3 (highest risk) due to absent floorplan. Article 4 and licensing each scored 2/3. Analysis continued — no kill-switch triggered — but all downstream outputs carry reduced confidence.</td></tr>
+            <tr><td class="td-key">Stage 6 — Layout</td><td>Without floorplan, layout feasibility confidence remained Low per Blueprint rules. Assumption-based layout scenario generated (Path A: 5-bed with loft) but labelled indicative only.</td></tr>
+            <tr><td class="td-key">Stage 9 — Refurb</td><td>Heavy-medium conversion scope applied. Cost range £55k–£72k (mid-spec). Cost matrix applied; no free-form figures used.</td></tr>
+            <tr><td class="td-key">Stage 10 — ROI</td><td>Modelled at asking price (£138k). Cash left in: ~£67k. Annual cashflow: £9k–£13k. ROI: 13–19%. Flagged as acceptable but not elite BRRRR recycling.</td></tr>
+            <tr><td class="td-key">Stage 11 — MAO</td><td>MAO tightened by missing floorplan, unknown licensing, damp risk, and absent comparables. Absolute ceiling: £128k vs asking £138k. First offer: £118k. Output handed to operator for negotiation and subsequent legal steps.</td></tr>
+            <tr><td class="td-key">Final verdict</td><td>CONDITIONAL CHASE. Area HIGH, rent MED-HIGH, layout LOW, overall MEDIUM. Four explicit conditions required before progression: floorplan, damp assessment, Article 4 check, licensing confirmation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="body-italic">This example illustrates the core design behaviour: the system did not refuse to analyse a property with missing inputs, but made every gap visible, propagated reduced confidence through all downstream outputs, and tightened the offer ceiling accordingly.</p>
+
+      <div class="subheading">Failure modes addressed during build</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:32%">Problem class</th><th>Design response</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">Missing floorplan handling</td><td>System originally allowed layout assessment without floorplan; revised to require floorplan or reduce feasibility confidence to Low</td></tr>
+            <tr><td class="td-key">Comparable age drift</td><td>Outdated comparables were not flagged; confidence downgrade logic added for comparables outside the accepted threshold</td></tr>
+            <tr><td class="td-key">Rent overestimation</td><td>Free-form rent assumptions allowed; revised to require rental portal or comparable evidence before rent figures are accepted</td></tr>
+            <tr><td class="td-key">HMO density skipped</td><td>Density and licensing register check could be bypassed; gating logic added to block HMO feasibility without this step</td></tr>
+            <tr><td class="td-key">ROI without refurb costs</td><td>ROI could be modelled with placeholder refurb figures; mandatory cost matrix reference enforced</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="body-italic">No recurring failure modes requiring architectural revision have emerged since Blueprint v2.7.1 was locked in January 2026. The system has been used for ongoing property evaluations without workflow or rule changes over this period.</p>
+    </section>
+
+    <!-- I -->
+    <section class="section" id="sec-i">
+      <div class="section-label"><span class="sec-key">I</span> Limitations</div>
+      <div class="callout callout-red">
+        <div class="callout-title">Stated plainly — these are not caveats to be softened</div>
+        <ul>
+          <li>The system cannot physically inspect properties. Structural, damp, and condition assessments depend entirely on what operators observe and report.</li>
+          <li>Layout feasibility assessments are indicative. They are not architectural drawings and do not constitute compliance confirmation.</li>
+          <li>ROI and BRRRR outputs are assumption-dependent. Market shifts, lender policy changes, or execution problems can invalidate modelled figures quickly.</li>
+          <li>Comparables in illiquid or thin markets may be insufficient. The system flags this but cannot resolve it.</li>
+          <li>HMO compliance varies by council interpretation. The system applies general HMO standards; local licensing authority decisions may differ.</li>
+          <li>The system cannot verify council decisions, planning applications, or licensing register entries in real time. Operators must check these externally.</li>
+          <li>AI judgment components (layout interpretation, risk commentary, comparable assessment) can be wrong. They are labelled with confidence levels for this reason.</li>
+          <li>Revision history from the Nov 2025 – Jan 2026 build period was not formally documented.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- J -->
+    <section class="section" id="sec-j">
+      <div class="section-label"><span class="sec-key">J</span> Technical Stack</div>
+      <div class="callout">
+        <div class="callout-title">Architecture type</div>
+        <ul>
+          <li>OverSight is a workflow-gated, prompt-orchestrated expert system — an LLM reasoning layer operating inside a deterministic rule engine. AI handles synthesis, interpretation, and drafting; rule logic handles scoring, calculation, sequencing, and kill-switch enforcement. Neither layer operates without the other.</li>
+          <li>The system comprises 14 named knowledge packs organised in a defined source priority hierarchy. Where pack rules conflict, a numeric override rule resolves precedence. Routing logic directs each query type to the appropriate pack automatically — refurb logic to the Refurb Engine, DD scoring to the DD Pack, financial calculations to the ROI Pack, and so on.</li>
+        </ul>
+      </div>
+      <div class="tbl-wrap" style="margin-top:20px">
+        <table>
+          <thead><tr><th style="width:30%">Component</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">Custom GPT (ChatGPT)</td><td>Runtime platform — hosts system instructions, knowledge packs, and workflow logic</td></tr>
+            <tr><td class="td-key">Blueprint layer (v2.7.1)</td><td>Governing document — defines sequencing rules, source priority hierarchy, authority boundaries, refusal conditions, and output constraints</td></tr>
+            <tr><td class="td-key">DD / Risk Pack</td><td>Scoring definitions, category weights, kill-switch rules, banding logic</td></tr>
+            <tr><td class="td-key">ROI Financial Engine</td><td>SDLT tiered band rules, ROI, BRRRR, stress-test, and cash-flow calculation logic</td></tr>
+            <tr><td class="td-key">MAO Logic Pack</td><td>Multi-pillar offer ceiling framework and negotiation guidance</td></tr>
+            <tr><td class="td-key">Market Intelligence Pack</td><td>Trend classification, volatility flags, area and rent confidence logic</td></tr>
+            <tr><td class="td-key">Finance &amp; Structures Pack</td><td>Financing assumptions, refinance logic, bridge and BTL structures</td></tr>
+            <tr><td class="td-key">Refurb &amp; Path Engine</td><td>Mandatory-first refurb logic, path sequencing — highest source priority</td></tr>
+            <tr><td class="td-key">HMO Cost Matrix</td><td>Fixed cost reference for all refurbishment estimates — no free-form figures permitted</td></tr>
+            <tr><td class="td-key">Comparison Engine</td><td>Multi-criteria deal normalisation and ranking framework</td></tr>
+            <tr><td class="td-key">System Behaviour Pack</td><td>Governs tone, question logic, output structure, and refusal conditions</td></tr>
+            <tr><td class="td-key">Interior Spec Pack</td><td>Finish standards and spec defaults for HMO room types</td></tr>
+            <tr><td class="td-key">Offer Playbook</td><td>Negotiation strategy templates and offer ladder logic</td></tr>
+            <tr><td class="td-key">Property Report Template</td><td>Structured output formats for Quick Scan, Full Report, and Comparison outputs</td></tr>
+            <tr><td class="td-key">Rightmove / Zoopla</td><td>Listing data and sold comparables input source</td></tr>
+            <tr><td class="td-key">SpareRoom / rental portals</td><td>Rental demand and room rate reference</td></tr>
+            <tr><td class="td-key">Council HMO registers</td><td>Licensing status and density verification</td></tr>
+            <tr><td class="td-key">Police.uk / StreetCheck</td><td>Crime and area profile data</td></tr>
+            <tr><td class="td-key">EPC databases</td><td>Energy performance certificate data</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- K -->
+    <section class="section" id="sec-k">
+      <div class="section-label"><span class="sec-key">K</span> What This Demonstrates</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:28%">Capability demonstrated</th><th style="width:38%">Evidence in this project</th><th>Relevant to</th></tr></thead>
+          <tbody>
+            <tr><td class="td-key">Evaluation workflow design</td><td>Structured 11-stage pipeline with enforced sequencing and gating logic</td><td>AI Workflow Design, AI Operations</td></tr>
+            <tr><td class="td-key">Rule-based constraint systems</td><td>Kill-switch logic, confidence downgrade rules, MAO floor discipline</td><td>AI Operations, Knowledge Engineering</td></tr>
+            <tr><td class="td-key">Human-in-the-loop architecture</td><td>Explicit human decision gates, authority boundaries, override requirements</td><td>AI Workflow Design, Responsible AI</td></tr>
+            <tr><td class="td-key">Failure mode handling</td><td>Missing data treated as risk, not neutral; confidence propagated through pipeline</td><td>AI Operations, Evaluation Design</td></tr>
+            <tr><td class="td-key">Multi-criteria evaluation</td><td>12-factor deal comparison engine; 10-category DD scoring framework</td><td>Evaluation Design, Knowledge Engineering</td></tr>
+            <tr><td class="td-key">Structured AI instruction design</td><td>14-pack knowledge architecture with source priority hierarchy and routing logic</td><td>AI Instruction Design, AI Operations</td></tr>
+            <tr><td class="td-key">Evidence discipline</td><td>Claim-evidence labelling, assumption transparency, confidence band outputs</td><td>AI Governance, Documentation</td></tr>
+            <tr><td class="td-key">Iterative system refinement</td><td>Multiple revision cycles from observed failure modes; stable since Jan 2026</td><td>AI Operations, System Design</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="subheading">Relevant roles</div>
+      <div class="role-tags">
+        <span class="role-tag">AI Workflow Designer</span>
+        <span class="role-tag">AI Operations Specialist</span>
+        <span class="role-tag">AI Systems Builder</span>
+        <span class="role-tag">Knowledge Engineer</span>
+        <span class="role-tag">Evaluation Systems Designer</span>
+        <span class="role-tag">Human-in-the-Loop Systems Architect</span>
+      </div>
+    </section>
+
+  </div>
+  <footer class="doc-footer">OverSight (OS) &nbsp;·&nbsp; Portfolio Documentation &nbsp;·&nbsp; January 2026 &nbsp;·&nbsp; For CV and application use</footer>
+</div>
+
+<script>
+  const sections=document.querySelectorAll('.section[id]');
+  const navLinks=document.querySelectorAll('.nav-list a');
+  const observer=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        navLinks.forEach(l=>l.classList.remove('active'));
+        const a=document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if(a)a.classList.add('active');
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>
