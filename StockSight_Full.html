@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StockSight — Project Summary</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a18;
+    --ink-mid: #4a4a46;
+    --ink-light: #8a8a84;
+    --rule: #e2e0d8;
+    --bg: #faf9f6;
+    --bg-card: #ffffff;
+    --accent: #1D4E89;
+    --accent-light: #dce8f5;
+    --green: #0F6E56;
+    --green-light: #e1f5ee;
+    --amber: #BA7517;
+    --amber-light: #faeeda;
+    --red: #A32D2D;
+    --red-light: #fcebeb;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  .doc-header {
+    border-top: 3px solid var(--accent);
+    padding-top: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .tag-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid #b5d4f4;
+    border-radius: 4px;
+    padding: 4px 10px;
+    margin-bottom: 1.25rem;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 2.6rem;
+    line-height: 1.15;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--ink-mid);
+    max-width: 580px;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1.25rem;
+  }
+
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-label { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-light); }
+  .meta-value { font-size: 13px; font-weight: 500; color: var(--ink); }
+
+  .section { margin-bottom: 2.5rem; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink-light); min-width: 24px; }
+
+  h2 { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.45rem; font-weight: 400; color: var(--ink); }
+
+  h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-mid); margin-bottom: 0.5rem; margin-top: 1.25rem; }
+
+  p { color: var(--ink-mid); margin-bottom: 0.9rem; font-size: 15px; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-light);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 14px;
+    color: #0C447C;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin: 1.25rem 0;
+  }
+
+  .stat-card { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 8px; padding: 1rem; }
+  .stat-label { font-size: 11px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-light); margin-bottom: 4px; }
+  .stat-value { font-size: 20px; font-weight: 600; color: var(--ink); }
+  .stat-sub { font-size: 11px; color: var(--ink-light); margin-top: 2px; }
+
+  .role-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 1rem 0; }
+  .role-table th { text-align: left; font-size: 11px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-light); padding: 6px 12px; border-bottom: 2px solid var(--rule); }
+  .role-table td { padding: 8px 12px; border-bottom: 1px solid var(--rule); color: var(--ink-mid); vertical-align: top; }
+  .role-table tr:last-child td { border-bottom: none; }
+  .role-table td:first-child { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent); white-space: nowrap; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.25rem 0; }
+  @media (max-width: 580px) { .two-col { grid-template-columns: 1fr; } h1 { font-size: 2rem; } }
+
+  .col-block { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 8px; padding: 1rem 1.25rem; }
+  .col-block h3 { margin-top: 0; }
+  .col-block ul { list-style: none; padding: 0; }
+  .col-block ul li { font-size: 13.5px; color: var(--ink-mid); padding: 3px 0; border-bottom: 1px solid var(--rule); line-height: 1.5; }
+  .col-block ul li:last-child { border-bottom: none; }
+
+  .evidence-block { background: var(--green-light); border: 1px solid #9fe1cb; border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .evidence-block p { color: #085041; margin-bottom: 0.5rem; font-size: 14px; }
+
+  .iteration-block { background: var(--amber-light); border: 1px solid #fac775; border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .iteration-block p { color: #633806; margin-bottom: 0.5rem; font-size: 14px; }
+
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 10px; margin: 1.25rem 0; }
+  .skill-item { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 6px; padding: 0.75rem 1rem; }
+  .skill-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .skill-desc { font-size: 12px; color: var(--ink-light); }
+
+  .badge { display: inline-block; font-size: 11px; font-family: 'DM Mono', monospace; padding: 2px 8px; border-radius: 4px; font-weight: 500; margin-right: 4px; margin-bottom: 4px; }
+  .badge-blue { background: var(--accent-light); color: #0C447C; border: 1px solid #b5d4f4; }
+  .badge-green { background: var(--green-light); color: #085041; border: 1px solid #9fe1cb; }
+  .badge-amber { background: var(--amber-light); color: #633806; border: 1px solid #fac775; }
+
+  .full-doc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid #b5d4f4;
+    border-radius: 6px;
+    padding: 8px 16px;
+    text-decoration: none;
+    margin-top: 1rem;
+  }
+
+  footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); font-size: 12px; color: var(--ink-light); font-family: 'DM Mono', monospace; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="tag-line">Portfolio Summary · Systems &amp; Workflow Design</div>
+  <h1>StockSight</h1>
+  <p class="subtitle">An automated event-driven mean reversion signal system — combining Gmail monitoring, AI-powered extraction, structured multi-layer evaluation, and a Google Sheets pipeline with human-in-the-loop decision authority throughout.</p>
+  <div class="meta-row">
+    <div class="meta-item">
+      <span class="meta-label">Type</span>
+      <span class="meta-value">Operational AI Workflow System</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Phase</span>
+      <span class="meta-value">Live experiment — 18 cases closed, calibrating</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Stack</span>
+      <span class="meta-value">Google Apps Script · Gemini AI · Claude AI · Gmail · Google Sheets</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Role</span>
+      <span class="meta-value">System designer, workflow architect, AI developer</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- A. WHAT I BUILT -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">A</span>
+    <h2>What I Built &amp; Why</h2>
+  </div>
+
+  <p>Mean reversion on large single-stock price drops is a well-documented strategy (Savor 2012). The practical barrier is not the strategy — it is the pipeline required to act on it reliably. Before StockSight, this meant 30–60 minutes of daily manual inbox scanning, inconsistent evaluation criteria, no structured records, and no feedback loop.</p>
+
+  <p>StockSight automates the entire intake-to-verdict pipeline. It monitors financial email alerts around the clock, extracts candidate stocks using Gemini AI, and routes them through an 11-layer structured evaluation framework (Claude AI) before surfacing a scored, documented verdict. All capital decisions remain with the human operator.</p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Scan windows</div>
+      <div class="stat-value">4×</div>
+      <div class="stat-sub">daily, global market hours</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Evaluation layers</div>
+      <div class="stat-value">11</div>
+      <div class="stat-sub">structured gate checks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Paper capital</div>
+      <div class="stat-value">€500–1k</div>
+      <div class="stat-sub">per signal, by verdict grade</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Cases closed</div>
+      <div class="stat-value">18</div>
+      <div class="stat-sub">60–80 needed to calibrate</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- B. MY ROLE -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">B</span>
+    <h2>My Role</h2>
+  </div>
+  <p>I designed, built, and iterated on every part of the system:</p>
+  <div class="two-col">
+    <div class="col-block">
+      <h3>Design &amp; architecture</h3>
+      <ul>
+        <li>End-to-end pipeline design from email signal to scored verdict</li>
+        <li>AI/rule/human responsibility boundary design</li>
+        <li>Failure mode identification and architectural response</li>
+        <li>Parameter validation via academic research</li>
+      </ul>
+    </div>
+    <div class="col-block">
+      <h3>Implementation</h3>
+      <ul>
+        <li>Google Apps Script automation (triggers, Gmail, Sheets sync)</li>
+        <li>Gemini AI integration (PS scan, cause verification)</li>
+        <li>Claude AI instruction design (11-layer evaluation rubric)</li>
+        <li>Analytics pipeline and retro check functions</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- C. HOW IT WORKS -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">C</span>
+    <h2>How It Works</h2>
+  </div>
+
+  <table class="role-table">
+    <thead>
+      <tr><th>Stage</th><th>What happens</th><th>Who does it</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Gmail intake</td>
+        <td>Financial alert emails auto-labeled StockSight_Pending by Gmail filters</td>
+        <td>Gmail rules (deterministic)</td>
+      </tr>
+      <tr>
+        <td>PS Scan</td>
+        <td>Email bodies sent to Gemini AI — returns JSON of candidate stocks with ticker, drop %, and cause (verified via independent Google Search)</td>
+        <td>Apps Script + Gemini AI</td>
+      </tr>
+      <tr>
+        <td>Tracker intake</td>
+        <td>Valid candidates written to Tracker (cols A–G, status NEW). Rejects logged. Duplicates skipped.</td>
+        <td>Apps Script (deterministic)</td>
+      </tr>
+      <tr>
+        <td>Gate+SS evaluation</td>
+        <td>11-layer structured evaluation: hard gate, live data fetch, sector context, gate criteria, management credibility, scoring (0–12), catalyst, bear case, trade classification</td>
+        <td>Claude AI within fixed rubric</td>
+      </tr>
+      <tr>
+        <td>Tracker sync</td>
+        <td>TSV output pasted into Updates tab; Apps Script writes evaluation cols (H–S) into correct Tracker row on checkbox trigger</td>
+        <td>Human paste + Apps Script</td>
+      </tr>
+      <tr>
+        <td>Monitoring</td>
+        <td>Daily check compares live price vs stop loss (−8%), target (pre-event price), and hard exit days. Auto-closes on trigger during experiment phase.</td>
+        <td>Apps Script (deterministic)</td>
+      </tr>
+      <tr>
+        <td>Entry decision</td>
+        <td>Human reviews scored verdict and decides whether to enter. System never commits capital.</td>
+        <td>Human</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- D. KEY DESIGN DECISIONS -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">D</span>
+    <h2>Key Design Decisions</h2>
+  </div>
+
+  <h3>AI does judgment inside guardrails — rules do gates</h3>
+  <p>AI is never trusted for binary irreversible decisions. Gemini extracts structured data from noisy text. Claude applies a fixed rubric to produce a scored verdict. Hard gates (fraud, halt, missing data) are deterministic Apps Script rules. Stop loss and target calculations are pure Sheets formulas. This separation prevents AI hallucination from directly affecting any decision point.</p>
+
+  <h3>Cause verification is always independent</h3>
+  <p>Email alert text is treated as a signal only — never as a source of truth for why a stock dropped. Every PS scan candidate triggers a separate Google Search to verify the cause independently. This is enforced in the Gemini prompt: event and reason fields are always blank in the initial extraction, filled only after search verification.</p>
+
+  <h3>Experiment phase: all Gate verdicts are informational</h3>
+  <p>For the first 60–80 closed cases, every candidate proceeds to full SS evaluation regardless of Gate outcome. This prevents premature hard-blocking before the system has enough data to validate each criterion. Gate verdicts are logged for future calibration, not used as blockers yet.</p>
+
+  <h3>Research-informed parameters</h3>
+  <p>Drop thresholds (US 10%, EU 6%), holding periods (BOUNCE 10 days, RECOVERY 4 weeks), RVOL signal classification, and EU vs US volatility adjustments are all grounded in published research — Savor (2012), Morgan Stanley Counterpoint Global (2025), Robeco (2023), and Perplexity Pro deep research (May 2026).</p>
+</div>
+
+
+<!-- E. WHAT THE DATA SHOWED — ITERATION -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">E</span>
+    <h2>Data-Driven Iteration</h2>
+  </div>
+
+  <div class="evidence-block">
+    <p><strong>Score inversion discovered (18 cases, May 2026):</strong> Score 7 Watch cases → 83% win rate, +10.9% average return. Score 9–10 High-quality cases → 16.7% win rate, −10.9% average return. The scoring model was rewarding the wrong signals.</p>
+  </div>
+
+  <p>Three targeted changes were made to the evaluation rubric in response, all grounded in research:</p>
+
+  <table class="role-table">
+    <thead>
+      <tr><th>Data insight</th><th>Design response</th><th>Principle</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>HQ earnings/guidance cases losing at high rate</td>
+        <td>Clarity score 3 capped at 2 for Earnings/Guidance/Downgrade events. High-quality verdict blocked for these event types when analyst consensus confirms the repricing.</td>
+        <td>High analytical clarity on an information event = correctly priced repricing, not overreaction. Ambiguity IS the mean reversion signal.</td>
+      </tr>
+      <tr>
+        <td>No way to detect analyst consensus alignment</td>
+        <td>New Gate criterion 7: analyst revision coherence check. Scores breadth, direction, magnitude, and language of analyst revisions 0–3. Score 3 reduces Bounded score and flags ANALYST CONSENSUS REPRICING.</td>
+        <td>When analysts revise coherently and directionally, the drop reflects new fundamental information — not a noise-driven overreaction.</td>
+      </tr>
+      <tr>
+        <td>Score dimensions never stored — analytics blind spot</td>
+        <td>Four new Tracker columns (AR–AU) capture Clarity, Bounded, Business, and Reaction scores from every evaluation. TSV output extended to include these fields.</td>
+        <td>Can't improve what you can't measure. Dimension-level data enables identifying which scoring criteria actually predict outcomes.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="iteration-block" style="margin-top: 1.5rem;">
+    <p><strong>Additional changes from this iteration:</strong> Automated exit for experiment phase (EXPERIMENT_AUTO_CLOSE flag) to accelerate closed-case accumulation. Weekly retro price check to distinguish "right thesis, wrong timing" from "wrong thesis" in Loss cases. Sector tagging for sector-level analytics. RECOVERY hard exit corrected from 56 to 28 days per KB v2 research.</p>
+  </div>
+</div>
+
+
+<!-- F. SKILLS DEMONSTRATED -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">F</span>
+    <h2>Skills Demonstrated</h2>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-item">
+      <div class="skill-title">AI workflow design</div>
+      <div class="skill-desc">Full pipeline: unstructured email → structured scored output, with explicit AI/rule/human boundaries</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Prompt engineering</div>
+      <div class="skill-desc">Two production system prompts with extraction schemas, rejection criteria, structured output formats, and verbosity constraints</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Evaluation framework design</div>
+      <div class="skill-desc">11-layer scoring rubric with cap rules, modifiers, confidence levels — fully documented and reproducible</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Automation (Apps Script)</div>
+      <div class="skill-desc">Triggers, Gmail reading, Sheets sync, retry logic, execution limit management, price locking</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Analytics design</div>
+      <div class="skill-desc">Category / drop bracket / dimension / sector / retro recovery analytics — feature space for future model calibration</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Research-informed design</div>
+      <div class="skill-desc">Parameters grounded in Savor (2012), Morgan Stanley (2025), Robeco (2023), and iterative operational data</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">Observability &amp; post-mortems</div>
+      <div class="skill-desc">Score inversion detected from live data; three targeted rubric changes with documented rationale</div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-title">System documentation</div>
+      <div class="skill-desc">Handoff docs, versioned KB, architectural decision logs, parameter validation trail</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top: 1.5rem;">
+    <strong>Relevant roles:</strong>
+    <span class="badge badge-blue">AI workflow architect</span>
+    <span class="badge badge-blue">AI operations</span>
+    <span class="badge badge-blue">Evaluation system design</span>
+    <span class="badge badge-blue">Internal AI tooling</span>
+    <span class="badge badge-green">Quant / research platform</span>
+    <span class="badge badge-amber">Human-in-the-loop system design</span>
+  </div>
+</div>
+
+
+<!-- G. CURRENT STATUS -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">G</span>
+    <h2>Current Status &amp; Next Milestones</h2>
+  </div>
+
+  <table class="role-table">
+    <thead>
+      <tr><th>Milestone</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>System operational</td><td>✅ Running — 4 daily scan windows, auto-monitoring, auto-close active</td></tr>
+      <tr><td>18 closed cases</td><td>✅ First analytics available — score inversion detected and remediated</td></tr>
+      <tr><td>Score dimensions tracked</td><td>✅ New Tracker cols AR–AU, TSV cols U–X — accumulating from new cases</td></tr>
+      <tr><td>Sector tagging</td><td>✅ Col AV in Tracker — backfill script ready to run</td></tr>
+      <tr><td>Retro check</td><td>✅ Weekly Sunday trigger active — first results in 14–60 days</td></tr>
+      <tr><td>Gate calibration (30 cases)</td><td>⏳ Pending — validates which Gate criteria are predictive</td></tr>
+      <tr><td>Full calibration (60 cases)</td><td>⏳ Pending — parameter adjustment recommendations</td></tr>
+      <tr><td>Production mode</td><td>⏳ Post-calibration — human review step restored, Gate becomes hard blocker</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  StockSight · Portfolio Summary · May 2026 · Full technical documentation available on request
+</footer>
+
+</body>
+</html>
